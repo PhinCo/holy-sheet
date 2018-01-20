@@ -1,0 +1,37 @@
+{
+  "name": "@connectedyard/csv-transform",
+  "version": "1.0.0",
+  "description": "Validate and map columns from one CSV file to another",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://jkennedy1980@github.com/PhinCo/csv-transform.git"
+  },
+  "keywords": [
+    "csv",
+    "transform",
+    "validate",
+    "map",
+    "import"
+  ],
+  "author": "Josh Kennedy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PhinCo/csv-transform/issues"
+  },
+  "homepage": "https://github.com/PhinCo/csv-transform#readme",
+  "dependencies": {
+    "csv": "^2.0.0",
+    "debug": "^3.1.0",
+    "fast-levenshtein": "^2.0.6",
+    "jsonschema": "^1.2.2",
+    "lodash": "^4.17.4",
+    "string-similarity": "^1.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^5.0.0"
+  }
+}
