@@ -4,6 +4,7 @@ module.exports = {
 	outputColumns: [
 		{
 			columnName: "String",
+			description: "",
 			type: 'string'
 		},
 		{

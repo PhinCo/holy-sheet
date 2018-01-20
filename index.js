@@ -139,6 +139,7 @@ exports._bestMatchesByName = function( columnTransformer, inputColumnNames, rows
 		return {
 			columnTransformerName,
 			inputColumnName,
+			description: columnTransformer.description,
 			isLikelyMatch: nameSimilarity > 0,
 			exampleData: exports._extractExampleData( columnTransformer, inputColumnName, rows )
 		};
@@ -147,9 +148,5 @@ exports._bestMatchesByName = function( columnTransformer, inputColumnNames, rows
 }
 
 exports._extractExampleData = function( columnTransformer, inputColumnName, rows ){
-	const results = _.map( rows, row =>{
-		const data = row[inputColumnName];
-		return data;
-	});
-	return results;
+	return _.map( rows, inputColumnName ); // TODO: transform it? rate matches by transformability for things like booleans? 
 }
