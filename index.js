@@ -4,7 +4,6 @@ const fs = require('fs');
 const moment = require('moment');
 const debug = require('debug')('csv-transform');
 const schemaValidator = require('./lib/schema-validator');
-const levenshtein = require('fast-levenshtein');
 const _ = require('lodash');
 const stringSimilarity = require('string-similarity');
 
