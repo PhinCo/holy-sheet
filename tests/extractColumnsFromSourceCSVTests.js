@@ -3,11 +3,11 @@ const csvTransform = require("../index");
 const basicCsvTransformer = require('./test-transformers/basic-csv.js');
 const _ = require('lodash');
 
-describe( 'loadColumnsFromCSVForSchema', function(){
+describe( 'extractColumnsFromCSVForSchema', function(){
 	
 	it( 'works', async function(){
 		const sourceCsvPath = "./tests/test-files/basic-csv.csv";
-		const results = await csvTransform.loadColumnsFromCSVForSchema( sourceCsvPath, basicCsvTransformer );
+		const results = await csvTransform.extractColumnsFromCSVForSchema( sourceCsvPath, basicCsvTransformer );
 		
 		_.each( results, result => {
 			const matches = [];

@@ -18,7 +18,7 @@ const stringSimilarity = require('string-similarity');
  * @param targetTransformer
  * @param parserOptions - overrides for the csv-parse library
  */
-exports.loadColumnsFromCSVForSchema = async function( sourceCsvFilePath, targetTransformer, parserOptions ){
+exports.extractColumnsFromCSVForSchema = async function( sourceCsvFilePath, targetTransformer, parserOptions ){
 	if( !sourceCsvFilePath ) throw new Error( 'You must provide a valid sourceCsvFilePath' );
 	if( !targetTransformer ) throw new Error( 'You must provide a valid targetTransformer' );
 	schemaValidator.validate( targetTransformer ); // throws if there's a problem
