@@ -10,8 +10,10 @@ describe( 'loadColumnsFromCSVForSchema', function(){
 		const results = await csvTransform.loadColumnsFromCSVForSchema( sourceCsvPath, basicCsvTransformer );
 		
 		_.each( results, result => {
-			const matches = _.map( result.possibleInputFileColumns, inputFileColumn => {
-				return `${inputFileColumn.inputColumnName} (${inputFileColumn.similarity})`;
+			const matches = [];
+			_.each( result.possibleInputFileColumns, inputFileColumn => {
+				if( !inputFileColumn.isLikelyMatch ) return;
+				matches.push(`${inputFileColumn.inputColumnName} (${inputFileColumn.exampleData.join(', ')})`);
 			})
 			console.log( result.columnName + " -> " + matches.join(", ") );
 		});

@@ -82,7 +82,7 @@ function _matchColumnTransformerToColumns( columnTransformer, inputColumnNames, 
 }
 
 function _matchStringColumnToInputColumns( columnTransformer, inputColumnNames, rows ){
-	const nameMatches = exports._bestMatchesByName( columnTransformer.columnName, inputColumnNames );
+	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
 		columnName: columnTransformer.columnName,
@@ -92,7 +92,7 @@ function _matchStringColumnToInputColumns( columnTransformer, inputColumnNames, 
 }
 
 function _matchIntegerColumnToInputColumns( columnTransformer, inputColumnNames, rows ){
-	const nameMatches = exports._bestMatchesByName( columnTransformer.columnName, inputColumnNames );
+	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
 		columnName: columnTransformer.columnName,
@@ -102,7 +102,7 @@ function _matchIntegerColumnToInputColumns( columnTransformer, inputColumnNames,
 }
 
 function _matchIntegerFloatToInputColumns( columnTransformer, inputColumnNames, rows ){
-	const nameMatches = exports._bestMatchesByName( columnTransformer.columnName, inputColumnNames );
+	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
 		columnName: columnTransformer.columnName,
@@ -112,7 +112,7 @@ function _matchIntegerFloatToInputColumns( columnTransformer, inputColumnNames, 
 }
 
 function _matchDateColumnToInputColumns( columnTransformer, inputColumnNames, rows ){
-	const nameMatches = exports._bestMatchesByName( columnTransformer.columnName, inputColumnNames );
+	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
 		columnName: columnTransformer.columnName,
@@ -122,7 +122,7 @@ function _matchDateColumnToInputColumns( columnTransformer, inputColumnNames, ro
 }
 
 function _matchBooleanColumnToInputColumns( columnTransformer, inputColumnNames, rows ){
-	const nameMatches = exports._bestMatchesByName( columnTransformer.columnName, inputColumnNames );
+	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
 		columnName: columnTransformer.columnName,
@@ -131,15 +131,25 @@ function _matchBooleanColumnToInputColumns( columnTransformer, inputColumnNames,
 	};
 }
 
-exports._bestMatchesByName = function( columnTransformerName, inputColumnNames ){
+exports._bestMatchesByName = function( columnTransformer, inputColumnNames, rows ){
+	const columnTransformerName = columnTransformer.columnName;
 	const results = _.map( inputColumnNames, inputColumnName => {
 		const nameSimilarity = stringSimilarity.compareTwoStrings( inputColumnName, columnTransformerName );
+		
 		return {
 			columnTransformerName,
 			inputColumnName,
-			similarity: stringSimilarity.compareTwoStrings( inputColumnName, columnTransformerName ),
-			isLikelyMatch: nameSimilarity > 0
+			isLikelyMatch: nameSimilarity > 0,
+			exampleData: exports._extractExampleData( columnTransformer, inputColumnName, rows )
 		};
 	});
 	return _.sortBy( results, 'similarity' );
+}
+
+exports._extractExampleData = function( columnTransformer, inputColumnName, rows ){
+	const results = _.map( rows, row =>{
+		const data = row[inputColumnName];
+		return data;
+	});
+	return results;
 }
