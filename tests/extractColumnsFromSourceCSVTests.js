@@ -13,6 +13,7 @@ describe( 'extractColumnsFromCSVForSchema', function(){
 		const [stringResult, dateResult, integerResult, floatResult, booleanResult] = results;
 
 		assert.equal( stringResult.columnName, "String" );
+		assert.equal( stringResult.description, "tis but a string" );
 		assert.lengthOf( stringResult.possibleInputFileColumns, 5 );
 		
 		// Only assert all of these once

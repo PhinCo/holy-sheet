@@ -4,24 +4,32 @@ module.exports = {
 	outputColumns: [
 		{
 			columnName: "String",
-			description: "",
-			type: 'string'
+			description: "tis but a string",
+			type: 'string',
+			validateMatchesRegex: '\d+/gi'
 		},
 		{
 			columnName: "Date",
-			type: 'date'
+			type: 'date',
+			inputFormat: 'MM/DD/YY',
+			outputFormat: 'YYYY-MM-DD'
 		},
 		{
 			columnName: "Integer",
-			type: 'integer'
+			type: 'integer',
+			min: 5,
+			max: 700
 		},
 		{
 			columnName: "Float",
-			type: 'float'
+			type: 'float',
+			min: 5.1,
+			max: 700.6
 		},
 		{
 			columnName: "Boolean",
-			type: 'boolean'
+			type: 'boolean',
+			defaultValue: false
 		}
 	]
 };

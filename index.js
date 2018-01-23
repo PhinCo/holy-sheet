@@ -65,27 +65,32 @@ function _matchTransformerToRows( rows, targetCsvSchema ){
 }
 
 function _matchColumnTransformerToColumns( columnTransformer, inputColumnNames, rows ){
+	
+	let output = null;
 	if( columnTransformer.type === 'string' || columnTransformer.type === void 0 ){
-		return _matchStringColumnToInputColumns( columnTransformer, inputColumnNames, rows );
+		output = _matchStringColumnToInputColumns( columnTransformer, inputColumnNames, rows );
 	}else if( columnTransformer.type === 'integer' ){
-		return _matchIntegerColumnToInputColumns( columnTransformer, inputColumnNames, rows );
+		output = _matchIntegerColumnToInputColumns( columnTransformer, inputColumnNames, rows );
 	}else if( columnTransformer.type === 'float' ){
-		return _matchIntegerFloatToInputColumns( columnTransformer, inputColumnNames, rows );
+		output = _matchIntegerFloatToInputColumns( columnTransformer, inputColumnNames, rows );
 	}else if( columnTransformer.type === 'date' ){
-		return _matchDateColumnToInputColumns( columnTransformer, inputColumnNames, rows );
+		output = _matchDateColumnToInputColumns( columnTransformer, inputColumnNames, rows );
 	}else if( columnTransformer.type === 'boolean' ){
-		return _matchBooleanColumnToInputColumns( columnTransformer, inputColumnNames, rows );
+		output = _matchBooleanColumnToInputColumns( columnTransformer, inputColumnNames, rows );
 	}
 	
-	throw new Error( 'unknown column transformer type: ' + columnTransformer.type );
+	if( !output ) throw new Error( 'unknown column transformer type: ' + columnTransformer.type );
+	
+	output.description =  columnTransformer.description;
+	output.columnName = columnTransformer.columnName;
+	output.transformer = columnTransformer;
+	return output;
 }
 
 function _matchStringColumnToInputColumns( columnTransformer, inputColumnNames, rows ){
 	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
-		columnName: columnTransformer.columnName,
-		transformer: columnTransformer,
 		possibleInputFileColumns: nameMatches
 	};
 }
@@ -94,8 +99,6 @@ function _matchIntegerColumnToInputColumns( columnTransformer, inputColumnNames,
 	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
-		columnName: columnTransformer.columnName,
-		transformer: columnTransformer,
 		possibleInputFileColumns: nameMatches
 	};
 }
@@ -104,8 +107,6 @@ function _matchIntegerFloatToInputColumns( columnTransformer, inputColumnNames, 
 	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
-		columnName: columnTransformer.columnName,
-		transformer: columnTransformer,
 		possibleInputFileColumns: nameMatches
 	};
 }
@@ -114,8 +115,6 @@ function _matchDateColumnToInputColumns( columnTransformer, inputColumnNames, ro
 	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
-		columnName: columnTransformer.columnName,
-		transformer: columnTransformer,
 		possibleInputFileColumns: nameMatches
 	};
 }
@@ -124,8 +123,6 @@ function _matchBooleanColumnToInputColumns( columnTransformer, inputColumnNames,
 	const nameMatches = exports._bestMatchesByName( columnTransformer, inputColumnNames, rows );
 
 	return {
-		columnName: columnTransformer.columnName,
-		transformer: columnTransformer,
 		possibleInputFileColumns: nameMatches
 	};
 }
@@ -137,7 +134,6 @@ exports._bestMatchesByName = function( columnTransformer, inputColumnNames, rows
 		
 		return {
 			inputColumnName,
-			description: columnTransformer.description,
 			isLikelyMatch: nameSimilarity > 0.3,
 			exampleData: exports._extractExampleData( columnTransformer, inputColumnName, rows ),
 			nameSimilarity
