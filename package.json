@@ -31,6 +31,7 @@
     "string-similarity": "^1.2.0"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
     "mocha": "^5.0.0"
   }
 }

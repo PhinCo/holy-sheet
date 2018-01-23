@@ -136,16 +136,90 @@ exports._bestMatchesByName = function( columnTransformer, inputColumnNames, rows
 		const nameSimilarity = stringSimilarity.compareTwoStrings( inputColumnName, columnTransformerName );
 		
 		return {
-			columnTransformerName,
 			inputColumnName,
 			description: columnTransformer.description,
-			isLikelyMatch: nameSimilarity > 0,
-			exampleData: exports._extractExampleData( columnTransformer, inputColumnName, rows )
+			isLikelyMatch: nameSimilarity > 0.3,
+			exampleData: exports._extractExampleData( columnTransformer, inputColumnName, rows ),
+			nameSimilarity
 		};
 	});
-	return _.sortBy( results, 'similarity' );
+	return _.sortBy( results, 'nameSimilarity' ).reverse();
 }
 
 exports._extractExampleData = function( columnTransformer, inputColumnName, rows ){
-	return _.map( rows, inputColumnName ); // TODO: transform it? rate matches by transformability for things like booleans? 
+	return _.map( rows, inputColumnName );
 }
+
+
+
+
+exports._coerceType = function( value, type, options ){
+	if( type === 'string' ){
+		return exports._coerceToString( value, options );
+	}else if( type === 'integer' ){
+		return exports._coerceToInteger( value, options );
+	}else if( type === 'float' ){
+		return exports._coerceToFloat( value, options );
+	}else if( type === 'date' ){
+		return exports._coerceToDateThenToString( value, options );
+	}else if( type === 'boolean' ){
+		return exports._coerceToBoolean( value, options );
+	}
+	
+	throw new Error( 'Unknown type in transformer: ' + type );
+};
+
+exports._coerceToString = function( value, options ){
+	return String( value );
+};
+
+exports._coerceToInteger = function( value, options ){
+	try{
+		return parseInt( value, 10 );
+	}catch( e ){
+		return 0;
+	}
+};
+
+exports._coerceToFloat = function( value, options ){
+	try{
+		return parseFloat( value );
+	}catch( e ){
+		return 0.0;
+	}
+};
+
+exports._coerceToDateThenToString = function( value, options ){
+	let m = null;
+	try{
+		if( options && options.inputFormat ){
+			m = moment( value, options.inputFormat );
+		}else{
+			m = moment( value );
+		}
+	}catch( e ){
+		return null;
+	}
+	
+	if( options && options.requireValidDate ){
+		if( !m.isValid() ) return null;
+	}
+
+	if( options && options.outputFormat ){
+		return m.format( value, options.outputFormat );
+	}else{
+		return moment( value ).format('MM/DD/YYYY HH:mm A');
+	} 
+};
+
+exports._coerceToBoolean = function( value, options ){
+	if( value === true ) return true;
+	if( value === false ) return false;
+
+	value = String(value).trim();
+	if( value === 'yes' ) return true;
+	if( value === 'true' ) return true;
+	if( value === '1' ) return true;
+	
+	return false;
+};
