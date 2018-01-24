@@ -1,0 +1,1 @@
+﻿"string, string", date, integer, float, boolean"one, one",1/1/18,1,1.1,TRUE"two, two",1/2/18,2,2.2,TRUE"three, three",1/3/18,3,3.3,FALSE"four, four",1/4/18,4,4.4,0"five, five",1/5/18,5,5.5,1"six, six",1/6/18,6,6.6,TRUE
