@@ -10,17 +10,19 @@ describe( 'transforming', function(){
 		"Date": "date",
 		"Integer": "integer",
 		"Float": "float",
-		"Boolean": "boolean"
+		"Boolean": "boolean",
+		"Enum": "enum"
 	};
 	
 	function _assertOutput( results ){
 		const [row1, row2, row3, row4, row5, row6 ] = results;
 
 		assert.equal( row1.String, 'one, one' );
-		assert.equal( row1.Date, '1/1/18' );
+		assert.equal( row1.Date, '01-01-18' );
 		assert.equal( row1.Integer, 1 );
 		assert.equal( row1.Float, 1.1 );
 		assert.equal( row1.Boolean, true );
+		assert.equal( row1.Enum, 'cats, dogs, pandas' );
 	}
 	
 	// TODO: move all theses test to the test for FileTransformer

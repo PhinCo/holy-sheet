@@ -30,6 +30,12 @@ module.exports = {
 			columnName: "Boolean",
 			type: 'boolean',
 			defaultValue: false
+		},
+		{
+			columnName: "Enum",
+			type: 'enum',
+			values: ['cats', 'dogs', 'pandas'],
+			multiple: true
 		}
 	]
 };
