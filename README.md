@@ -2,6 +2,9 @@
 
 Converts spreadsheets created and modified by humans and converts them sheets that can be used by machines.
 
+![alt text](https://raw.githubusercontent.com/PhinCo/holy-sheet/master/images/monkey-typing.png)
+
+
 ## Extract column data from source CSV file
 
 Call `extractColumnsFromCSVForSchema()` to get a set of fields from the transformer
