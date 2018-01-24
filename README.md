@@ -1,6 +1,6 @@
-# csv-transform
+# Holy Sheet
 
-Validate and map columns from one CSV file to another
+Converts spreadsheets created and modified by humans and converts them sheets that can be used by machines.
 
 ## Extract column data from source CSV file
 
