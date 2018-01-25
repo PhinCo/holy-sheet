@@ -24,7 +24,6 @@ describe( 'transforming', function(){
 	}
 	
 	after( function(){
-		console.log("cleanup");
 		if( fs.existsSync(csvOutputPath) ) fs.unlinkSync( csvOutputPath );
 		if( fs.existsSync(xslxOutputPath) ) fs.unlinkSync( xslxOutputPath );
 	});
