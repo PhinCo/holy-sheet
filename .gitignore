@@ -65,3 +65,4 @@ typings/
 /.idea/csv-transform.iml
 .DS_Store
 /.idea/holy-sheet.iml
+/tests/test-files/~$basic.xlsx
