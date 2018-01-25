@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/PhinCo/holy-sheet.svg?branch=master)](https://travis-ci.org/PhinCo/holy-sheet)
 [![codecov](https://codecov.io/gh/PhinCo/holy-sheet/branch/master/graph/badge.svg)](https://codecov.io/gh/PhinCo/holy-sheet)
+[![NSP Status](https://nodesecurity.io/orgs/phinco/projects/ac838375-a07c-4ce6-bcd6-ba220984bf9a/badge)](https://nodesecurity.io/orgs/phinco/projects/ac838375-a07c-4ce6-bcd6-ba220984bf9a)
+
 
 
 Converts spreadsheets created and modified by humans and converts them sheets that can be used by machines.
