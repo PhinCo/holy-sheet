@@ -62,22 +62,23 @@ describe( 'transforming', function(){
 		assert.equal( row6.Enum, 'cats' );
 	}
 
-	it( 'appropriately loads a csv file and offers suggestions', async function(){
-		const inputPath = './tests/test-files/basic.csv';
-
-		const fileTransformer = new FileTransformer( basicCsvTransformer, columnMapping );
-		const reader = new CsvReader( inputPath );
+	it( 'appropriately loads a csv file and transforms rows', async function(){
+		const reader = new CsvReader( './tests/test-files/basic.csv' );
 		const rows = await reader.readEntireFile();
+		
+		const fileTransformer = new FileTransformer( basicCsvTransformer, columnMapping );
 		const results = await fileTransformer.transformRows( rows );
+		
 		_assertOutput( results );
 	});
 
-	it( 'appropriately loads a xlsx file and offers suggestions', async function(){
-		const inputPath = './tests/test-files/basic.xlsx';
-		const fileTransformer = new FileTransformer( basicCsvTransformer, columnMapping );
-		const reader = new XlsxReader( inputPath );
+	it( 'appropriately loads a xlsx file and transforms rows', async function(){
+		const reader = new XlsxReader( './tests/test-files/basic.xlsx' );
 		const rows = await reader.readEntireFile();
+		
+		const fileTransformer = new FileTransformer( basicCsvTransformer, columnMapping );
 		const results = await fileTransformer.transformRows( rows );
+		
 		_assertOutput( results );
 	});
 
