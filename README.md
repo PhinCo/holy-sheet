@@ -1,5 +1,8 @@
 # Holy Sheet
 
+[![Build Status](https://travis-ci.org/PhinCo/holy-sheet.svg?branch=master)](https://travis-ci.org/PhinCo/holy-sheet)
+
+
 Converts spreadsheets created and modified by humans and converts them sheets that can be used by machines.
 
 ![alt text](https://raw.githubusercontent.com/PhinCo/holy-sheet/master/images/holy-sheet-intro.png)
