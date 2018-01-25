@@ -1,0 +1,24 @@
+
+> @connectedyard/csv-transform@1.0.0 test /Users/josh/WorkingCopies/holy-sheet
+> ./node_modules/mocha/bin/mocha tests/**/*Tests.js --reporter spec
+
+
+
+  coercion
+    ✓ coerces date values
+    ✓ coerces string values
+    ✓ coerces float values
+    ✓ coerces integer values
+    ✓ coerces boolean values
+
+  prepareColumnMappingInfo
+    ✓ appropriately loads a csv file and offers suggestions
+    ✓ appropriately loads a xlsx file and offers suggestions
+
+  transforming
+    ✓ appropriately loads a csv file and offers suggestions
+    ✓ appropriately loads a xlsx file and offers suggestions
+
+
+  9 passing (81ms)
+
