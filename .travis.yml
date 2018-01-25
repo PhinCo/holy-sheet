@@ -4,6 +4,8 @@ node_js:
 cache:
   directories:
     - "node_modules"
+env:
+  - TRAVIS=true
 before_install:
 install:
   - npm install
