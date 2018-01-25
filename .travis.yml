@@ -8,4 +8,4 @@ before_install:
 install:
   - npm install
 script:
-   - ember test --server
+  - npm run test
