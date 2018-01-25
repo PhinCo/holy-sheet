@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha tests/**/*Tests.js --reporter spec",
-    "coverage": "./node_modules/nyc/bin/nyc.js --reporter=lcov npm test"
+    "coverage": "./node_modules/nyc/bin/nyc.js --reporter=lcov npm test",
+    "lint": "./node_modules/.bin/eslint ."
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
+    "eslint": "^4.16.0",
     "mocha": "^5.0.0",
     "nyc": "^11.4.1"
   }

@@ -1,5 +1,5 @@
 
-const coercion = require("../lib/coercion");
+const coercion = require('../lib/coercion');
 const assert = require('chai').assert;
 const moment = require('moment');
 
