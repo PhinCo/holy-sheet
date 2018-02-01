@@ -1,7 +1,7 @@
 
 
 module.exports = {
-	outputColumns: [
+	columns: [
 		{
 			columnName: 'String',
 			description: 'tis but a string',
