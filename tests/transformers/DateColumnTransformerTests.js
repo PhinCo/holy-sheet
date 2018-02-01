@@ -1,7 +1,6 @@
 
 const DateColumnTransformer = require('../../lib/transformers/DateColumnTransformer');
 const assert = require('chai').assert;
-const _ = require('lodash');
 const moment = require('moment');
 
 describe( 'DateColumnTransformer', function(){
