@@ -2,7 +2,7 @@
 const FloatColumnTransformer = require('../../lib/transformers/FloatColumnTransformer');
 const assert = require('chai').assert;
 
-describe( 'IntegerColumnTransformer', function(){
+describe( 'FloatColumnTransformer', function(){
 
 	it( 'works with default settings and integery values', async function(){
 		const transformer = new FloatColumnTransformer( {}, "source" );

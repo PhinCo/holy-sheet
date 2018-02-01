@@ -34,7 +34,7 @@ module.exports = {
 		{
 			columnName: 'Enum',
 			type: 'enum',
-			values: ['cats', 'dogs', 'pandas'],
+			allowedValues: ['cats', 'dogs', 'pandas'],
 			multiple: true
 		}
 	]
