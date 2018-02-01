@@ -5,8 +5,7 @@ module.exports = {
 		{
 			columnName: 'String',
 			description: 'tis but a string',
-			type: 'string',
-			validateMatchesRegex: /\d+/gi
+			type: 'string'
 		},
 		{
 			columnName: 'Date',
@@ -28,8 +27,7 @@ module.exports = {
 		},
 		{
 			columnName: 'Boolean',
-			type: 'boolean',
-			defaultValue: false
+			type: 'boolean'
 		},
 		{
 			columnName: 'Enum',
