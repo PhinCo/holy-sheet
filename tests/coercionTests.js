@@ -91,5 +91,4 @@ describe( 'coercion', function(){
 		assert.isFalse( coercion.coerceToBoolean( false ) );
 	});
 
-
 });
