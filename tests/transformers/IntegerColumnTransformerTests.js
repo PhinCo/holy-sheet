@@ -43,12 +43,12 @@ describe( 'IntegerColumnTransformer', function(){
 			maxValue: 20
 		}, "source" );
 
-		assert.equal( transformer.transform( '4' ), 5 );
-		assert.equal( transformer.transform( '5' ), 5 );
-		assert.equal( transformer.transform( '6' ), 6 );
-		assert.equal( transformer.transform( '19' ), 19 );
-		assert.equal( transformer.transform( '20' ), 20 );
-		assert.equal( transformer.transform( '21' ), 20 );
+		assert.strictEqual( transformer.transform( '4' ), 5 );
+		assert.strictEqual( transformer.transform( '5' ), 5 );
+		assert.strictEqual( transformer.transform( '6' ), 6 );
+		assert.strictEqual( transformer.transform( '19' ), 19 );
+		assert.strictEqual( transformer.transform( '20' ), 20 );
+		assert.strictEqual( transformer.transform( '21' ), 20 );
 	});
 	
 });

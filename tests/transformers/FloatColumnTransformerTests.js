@@ -39,4 +39,20 @@ describe( 'FloatColumnTransformer', function(){
 		assert.equal( transformer.transform( Infinity ), -1.1 );
 	});
 
+	it( 'allows providing min and max values', async function(){
+		const transformer = new FloatColumnTransformer( {
+			minValue: 5,
+			maxValue: 20
+		}, "source" );
+
+		assert.strictEqual( transformer.transform( '4' ), 5.0 );
+		assert.strictEqual( transformer.transform( '4.9999999999999999999' ), 5.0 );
+		assert.strictEqual( transformer.transform( '5.0000000000000000001' ), 5.0  );
+		assert.strictEqual( transformer.transform( '5' ), 5.0  );
+
+		assert.strictEqual( transformer.transform( '19.9999999999999999999' ), 19.9999999999999999999 );
+		assert.strictEqual( transformer.transform( '20.0' ), 20.0 );
+		assert.strictEqual( transformer.transform( '20.00000000000000000001' ), 20.0 );
+	});
+	
 });
