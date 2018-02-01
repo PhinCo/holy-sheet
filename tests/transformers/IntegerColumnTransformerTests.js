@@ -22,8 +22,8 @@ describe( 'IntegerColumnTransformer', function(){
 		const transformer = new IntegerColumnTransformer( {}, "source" );
 
 		assert.isNull( transformer.transform( 'a' ) );
-		// assert.isNull( transformer.transform( NaN ) );
-		// assert.isNull( transformer.transform( Infinity ) );
+		assert.isNull( transformer.transform( NaN ) );
+		assert.isNull( transformer.transform( Infinity ) );
 	});
 	
 	it( 'allows overriding the default value', async function(){
