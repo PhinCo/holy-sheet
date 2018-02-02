@@ -1,5 +1,5 @@
 {
-  "name": "@connectedyard/csv-transform",
+  "name": "@connectedyard/holysheet",
   "version": "1.0.0",
   "description": "Validate and map columns from one CSV file to another",
   "main": "index.js",
