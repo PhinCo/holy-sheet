@@ -1,4 +1,8 @@
 
-exports.prepareColumnMappingInfo = require('./lib/columnMatchupSuggestions').prepareColumnMappingInfo;
+import { prepareColumnMappingInfo } from './lib/columnMatchupSuggestions';
+import transform from './lib/transformingEngine';
 
-exports.transform = require('./lib/transformingEngine').transform;
+export default {
+	prepareColumnMappingInfo,
+	transform
+};
