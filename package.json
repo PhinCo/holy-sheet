@@ -4,7 +4,7 @@
   "description": "Validate and map columns from one CSV file to another",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha tests/*Tests.js --reporter spec",
+    "test": "./node_modules/mocha/bin/mocha --reporter spec --require @babel/register --require @babel/polyfill tests/*Tests.js",
     "coverage": "./node_modules/nyc/bin/nyc.js --reporter=lcov npm test",
     "lint": "./node_modules/.bin/eslint ."
   },
@@ -27,18 +27,23 @@
   "homepage": "https://github.com/PhinCo/csv-transform#readme",
   "dependencies": {
     "csv": "^2.0.0",
-    "debug": "^3.1.0",
-    "jsonschema": "^1.2.2",
-    "lodash": "^4.17.4",
-    "moment": "^2.20.1",
+    "debug": "^3.2.6",
+    "jsonschema": "^1.2.4",
+    "lodash": "^4.17.11",
+    "moment": "^2.22.2",
     "papaparse": "^4.6.1",
-    "string-similarity": "^1.2.0",
-    "xlsx": "^0.11.18"
+    "string-similarity": "^1.2.2",
+    "xlsx": "^0.11.19"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "eslint": "^4.16.0",
-    "mocha": "^5.0.0",
-    "nyc": "^11.4.1"
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "chai": "^4.2.0",
+    "eslint": "^4.19.1",
+    "mocha": "^5.2.0",
+    "nyc": "^11.9.0"
   }
 }

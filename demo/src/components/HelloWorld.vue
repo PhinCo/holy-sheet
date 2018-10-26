@@ -64,7 +64,6 @@ export default {
 			]
 		});
 		this.columnMappings = result;
-		console.log( result )
 	},
 	_fileChanged () {
 

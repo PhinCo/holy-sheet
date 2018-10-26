@@ -1,7 +1,7 @@
-
-const transform = require('../index');
-const basicCsvTransformer = require('./test-transformers/basic.js');
-const assert = require('chai').assert;
+import transform from '../index';
+import basicCsvTransformer from './test-transformers/basic.js';
+import { assert } from 'chai';
+import fs from 'fs';
 
 describe( 'prepareColumnMappingInfo', function(){
 	
@@ -14,7 +14,7 @@ describe( 'prepareColumnMappingInfo', function(){
 
 		// Only assert all of these once
 		assert.isTrue( stringResult.possibleInputFileColumns[0].isLikelyMatch );
-		assert.equal( stringResult.possibleInputFileColumns[0].inputColumnName, 'string, string' );
+		assert.equal( stringResult.possibleInputFileColumns[0].inputColumnName, 'string' );
 		assert.deepEqual( stringResult.possibleInputFileColumns[0].exampleData, ['one, one', 'two, two', 'three, three', 'four, four', 'five, five', 'six, six'] );
 
 		assert.equal( stringResult.possibleInputFileColumns[1].inputColumnName, 'integer' );
@@ -64,17 +64,57 @@ describe( 'prepareColumnMappingInfo', function(){
 		assert.isTrue( enumResult.possibleInputFileColumns[0].isLikelyMatch );
 		assert.equal( enumResult.possibleInputFileColumns[0].inputColumnName, 'enum' );
 	}
+
+
 	
 	it( 'appropriately loads a csv file and offers suggestions', async function(){
-		const sourceCsvPath = './tests/test-files/basic.csv';
-		const results = await transform.prepareColumnMappingInfo( sourceCsvPath, basicCsvTransformer );
+		const file = new MockFile('./tests/test-files/basic.csv');
+		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer );
 		_assertOutput( results );
 	});
 
 	it( 'appropriately loads a xlsx file and offers suggestions', async function(){
-		const sourceXlsxPath = './tests/test-files/basic.xlsx';
-		const results = await transform.prepareColumnMappingInfo( sourceXlsxPath, basicCsvTransformer );
+		const file = new MockFile('./tests/test-files/basic.xlsx');
+		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer );
 		_assertOutput( results );
 	});
 	
 });
+
+class MockFile{
+	constructor( filepath ){
+		const path = require('path');
+		this.filepath = filepath;
+		this.name = path.basename( filepath );
+	}
+}
+class MockFileReaderSync {
+	readAsText( file ){
+		return fs.readFileSync( file.filepath, { encoding: 'utf8' } );
+	}
+}
+
+class MockFileReader {
+
+	readAsText( file ){
+		const data = fs.readFileSync( file.filepath, { encoding: 'utf8' });
+		this.onload({
+			target: {
+				result: data
+			}
+		});
+	}
+
+	readAsBinaryString( file ){
+		const binary = fs.readFileSync( file.filepath, { encoding: 'binary' });
+		this.onload({
+			target: {
+				result: binary.toString()
+			}
+		});
+	}
+}
+
+global.File = MockFile;
+global.FileReaderSync = MockFileReaderSync;
+global.FileReader = MockFileReader;
