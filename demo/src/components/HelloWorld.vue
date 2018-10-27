@@ -55,6 +55,8 @@ export default {
 	async _drop ( e ) {
 		const files = e.dataTransfer.files
 		const result = await holysheet.prepareColumnMappingInfo( files[0], {
+			headerRowNumber: 10,
+			skipRowsFromHeader: [1, 2],
 			columns: [
 				{
 					columnName: 'OutputColumnName',
