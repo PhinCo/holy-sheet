@@ -1,54 +1,56 @@
 <template>
-  <div class="hello">
-	<div 
-		ref="dropElement"
-		class="dropElement"
-		:class="{ dragging: dragging }"
-		draggable="true"
-		@dragenter.stop.prevent="_dragEnter"
-		@dragleave.stop.prevent="_dragLeave"
-		@dragover.stop.prevent="_dragOver"
-		@drop.stop.prevent="_drop"
-	>
-	<input ref="fileInput" 
-		class="file-input"
-		type="file"
-		@change.stop.prevent="_fileChanged" />
-	</div>
-
-	<div v-if="columnMappings">
-		<table class="transformerTable">
-			<tr>
-				<th>Field</th>
-				<th>Type</th>
-				<th>matches column from<br/><small>{{filename}}</small></th>
-			</tr>
-			<tr v-for="column in columnMappings" :key="column.columnName">
-				<td>
-					<strong>{{column.columnName}}</strong><br/>
-					<small>{{column.description}}</small>
-				</td>
-				<td>{{column.transformer.type}}</td>
-				<td>
-					<ul class='dropdown'>
-						<li>
+	<div>
+		<div class="row">
+			<div class="col">
+				<div 
+					ref="dropElement"
+					class="dropElement"
+					:class="{ dragging: dragging }"
+					draggable="true"
+					@dragenter.stop.prevent="_dragEnter"
+					@dragleave.stop.prevent="_dragLeave"
+					@dragover.stop.prevent="_dragOver"
+					@drop.stop.prevent="_drop"
+				>
+				<b-form-file ref="fileInput" placeholder="Choose a file..." @change.stop.prevent="_fileChanged" ></b-form-file>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row" v-if="columnMappings">
+			<div class="col">
+				<table class="table">
+					<tr>
+						<th>Field</th>
+						<th>Type</th>
+						<th>matches column from<br/><small>{{filename}}</small></th>
+					</tr>
+					<tr v-for="column in columnMappings" :key="column.columnName">
+						<td>
+							<strong>{{column.columnName}}</strong><br/>
+							<small>{{column.description}}</small>
+						</td>
+						<td>{{column.transformer.type}}</td>
+						<td class="chooseColumn">
 							<div class="currentSelection">
-								<h4>{{columnSelections[column.columnName].inputColumnName}}</h4>
-								<span class="exampleData">{{columnSelections[column.columnName].exampleData.join(', ')}}</span>
+								<strong>{{columnSelections[column.columnName].inputColumnName}}</strong><br/>
+								<small>{{columnSelections[column.columnName].exampleData.join(', ')}}</small>
 							</div>
-							<ul class="dropdown-box">
-								<li class="candidateSelection" v-for="possible in column.possibleInputFileColumns" :key="column.columnName + '-' + possible.inputColumnName" @click="select( column, possible )">
-									<h4>{{possible.inputColumnName}}</h4>
-									<span class="exampleData">{{possible.exampleData.join(', ')}}</span>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</td>
-			</tr>
-		</table>
+							<b-dropdown class="columnDropdown" variant="outline-secondary" size="sm">
+								<b-dropdown-item class="columnSelection" v-for="possible in column.possibleInputFileColumns" :key="column.columnName + '-' + possible.inputColumnName" @click="select( column, possible )">
+									{{possible.inputColumnName}}<br/>
+									<small>{{possible.exampleData.join(', ')}}</small>
+								</b-dropdown-item>
+								<b-dropdown-divider></b-dropdown-divider>
+								<b-dropdown-item>Skip Column</b-dropdown-item>
+							</b-dropdown>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
 	</div>
-  </div>
 </template>
 
 <script>
@@ -186,7 +188,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped lang="scss">
 	h3 {
 		margin: 40px 0 0;
 	}
@@ -195,13 +197,39 @@ export default {
 		list-style-type: none;
 		padding: 0;
 	}
+
 	li {
 		display: inline-block;
 		margin: 0 10px;
 	}
 
-	a {
-		color: #42b983;
+	.chooseColumn {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+
+		.currentSelection{
+			display: inline-block;
+			
+			small {
+				font-size: 11px;
+				color: #666;
+			}
+		}
+
+		.columnDropdown{
+			margin-left: 10px;
+		}
+
+		.columnSelection{
+			margin: 0;
+
+			small {
+				font-size: 11px;
+				color: #666;
+			}
+		}
 	}
 
 	.dropElement {
@@ -212,44 +240,6 @@ export default {
 
 	.dragging {
 		border: 4px dashed red;
-	}
-
-	.dropdown {
-		display: inline-block;
-		position: relative;
-	}
-
-	.dropdown > li {
-		padding: 0;
-		margin: 0;
-	}
-
-	.dropdown, .dropdown ul {
-		border: 1px solid silver;
-		background: white;
-	}
-
-	.dropdown ul {
-		position: absolute;
-		min-width: 300px;
-		max-width: 600px;
-		list-style-type: none;
-		padding: 0;
-		margin: 0;
-		left: 0;
-		height: 0;
-		overflow: hidden;
-		border-color: transparent;
-		background-clip: padding-box;
-	}
-
-	.dropdown:hover ul {
-		height: auto;
-		border-color: silver;
-	}
-
-	.dropdown li:nth-child(n+2) {
-		border-top: 1px solid silver;
 	}
 
 	.transformerTable {
@@ -264,40 +254,6 @@ export default {
 	.transformerTable td{
 		padding: 4px 5% 4px 0;
 		text-align: left;
-	}
-
-	.currentSelection {
-		padding: 4px 30px 4px 6px;
-	}
-
-	.currentSelection h4{
-		margin: 0;
-		overflow: hidden;
-	}
-
-	.currentSelection .exampleData{
-		font-size: 12px;
-		color: #555;
-	}
-
-	.candidateSelection {
-		padding: 4px 30px 4px 6px;
-		width: 100%;
-		cursor: pointer;
-	}
-
-	.candidateSelection:hover {
-		background-color: #eee;
-	}
-
-	.candidateSelection h4{
-		margin: 0;
-		overflow: hidden;
-	}
-
-	.candidateSelection .exampleData{
-		font-size: 12px;
-		color: #555;
 	}
 
 </style>
