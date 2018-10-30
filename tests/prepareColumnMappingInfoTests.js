@@ -69,13 +69,13 @@ describe( 'prepareColumnMappingInfo', function(){
 	
 	it( 'appropriately loads a csv file and offers suggestions', async function(){
 		const file = new MockFile('./tests/test-files/basic.csv');
-		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer );
+		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer, { rowCount: 6 } );
 		_assertOutput( results );
 	});
 
 	it( 'appropriately loads a xlsx file and offers suggestions', async function(){
 		const file = new MockFile('./tests/test-files/basic.xlsx');
-		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer );
+		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer, { rowCount: 6 } );
 		_assertOutput( results );
 	});
 	

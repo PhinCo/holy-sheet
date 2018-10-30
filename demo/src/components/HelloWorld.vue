@@ -22,7 +22,6 @@
 				<table class="table">
 					<tr>
 						<th>Field</th>
-						<th>Type</th>
 						<th>matches column from<br/><small>{{filename}}</small></th>
 					</tr>
 					<tr v-for="column in columnMappings" :key="column.columnName">
@@ -30,11 +29,13 @@
 							<strong>{{column.columnName}}</strong><br/>
 							<small>{{column.description}}</small>
 						</td>
-						<td>{{column.transformer.type}}</td>
 						<td class="chooseColumn">
-							<div class="currentSelection">
+							<div class="currentSelection" v-if="columnSelections[column.columnName]">
 								<strong>{{columnSelections[column.columnName].inputColumnName}}</strong><br/>
 								<small>{{columnSelections[column.columnName].exampleData.join(', ')}}</small>
+							</div>
+							<div v-else>
+								Skipped
 							</div>
 							<b-dropdown class="columnDropdown" variant="outline-secondary" size="sm">
 								<b-dropdown-item class="columnSelection" v-for="possible in column.possibleInputFileColumns" :key="column.columnName + '-' + possible.inputColumnName" @click="select( column, possible )">
@@ -42,7 +43,7 @@
 									<small>{{possible.exampleData.join(', ')}}</small>
 								</b-dropdown-item>
 								<b-dropdown-divider></b-dropdown-divider>
-								<b-dropdown-item>Skip Column</b-dropdown-item>
+								<b-dropdown-item @click="deselect( column )">Skip Column</b-dropdown-item>
 							</b-dropdown>
 						</td>
 					</tr>
@@ -182,6 +183,9 @@ export default {
 	},
 	select( column, columnMapping ){
 		this.$set( this.columnSelections, column.columnName, columnMapping ); // need to use $set or reactivity doesn't work
+	},
+	deselect( column ){
+		this.$set( this.columnSelections, column.columnName, null );
 	}
   }
 }
