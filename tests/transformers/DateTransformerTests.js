@@ -2,7 +2,7 @@ import DateTransformer from '../../lib/transformers/DateTransformer';
 import { assert } from 'chai';
 import moment from 'moment';
 
-describe( 'DateColumnTransformer', function(){
+describe( 'DateTransformer', function(){
 
 	function _stringToDate( dateString ){
 		return moment( dateString, 'MM/DD/YYYY' ).toDate();

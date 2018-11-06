@@ -1,7 +1,7 @@
 import EnumTransformer from '../../lib/transformers/EnumTransformer';
 import { assert } from 'chai';
 
-describe( 'EnumColumnTransformer', function(){
+describe( 'EnumTransformer', function(){
 	
 	it( 'works with default settings', async function(){
 		const transformer = new EnumTransformer( {

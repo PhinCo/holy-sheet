@@ -2,7 +2,7 @@
 import StringTransformer from '../../lib/transformers/StringTransformer';
 import { assert } from 'chai';
 
-describe( 'StringColumnTransformer', function(){
+describe( 'StringTransformer', function(){
 
 	it( 'works with default settings', function(){
 		const transformer = new StringTransformer( { name: 'string' } );

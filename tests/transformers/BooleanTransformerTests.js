@@ -1,7 +1,7 @@
 import BooleanTransformer from '../../lib/transformers/BooleanTransformer';
 import { assert } from 'chai';
 
-describe( 'BooleanColumnTransformer', function(){
+describe( 'BooleanTransformer', function(){
 
 	it( 'works with truthy values', async function(){
 		const transformer = new BooleanTransformer( { name: 'boolean' } );

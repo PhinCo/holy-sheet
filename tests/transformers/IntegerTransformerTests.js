@@ -1,7 +1,7 @@
 import IntegerTransformer from '../../lib/transformers/IntegerTransformer';
 import { assert } from 'chai';
 
-describe( 'IntegerColumnTransformer', function(){
+describe( 'IntegerTransformer', function(){
 
 	it( 'works with default settings and integery values', async function(){
 		const transformer = new IntegerTransformer( { name: 'integer' } );

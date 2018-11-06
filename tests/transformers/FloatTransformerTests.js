@@ -1,7 +1,7 @@
 import FloatTransformer from '../../lib/transformers/FloatTransformer';
 import { assert } from 'chai';
 
-describe( 'FloatColumnTransformer', function(){
+describe( 'FloatTransformer', function(){
 
 	it( 'works with default settings and integery values', async function(){
 		const transformer = new FloatTransformer( { name: 'float' } );
