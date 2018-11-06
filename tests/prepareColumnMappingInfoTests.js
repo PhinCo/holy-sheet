@@ -4,8 +4,8 @@ import { assert } from 'chai';
 
 describe( 'prepareColumnMappingInfo', function(){
 	
-	function _assertOutput( results ){
-		const [stringResult, dateResult, integerResult, floatResult, booleanResult, enumResult] = results;
+	function _assertOutput( result ){
+		const [stringResult, dateResult, integerResult, floatResult, booleanResult, enumResult] = result.suggestions;
 
 		assert.equal( stringResult.name, 'String' );
 		assert.equal( stringResult.description, 'tis but a string' );
@@ -66,19 +66,19 @@ describe( 'prepareColumnMappingInfo', function(){
 
 	it( 'appropriately loads a csv file and offers suggestions', async function(){
 		const file = new File('./tests/test-files/basic.csv');
-		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer, { rowCount: 6 } );
-		_assertOutput( results );
+		const result = await transform.prepareColumnMappingInfo( file, basicCsvTransformer, { rowCount: 3 } );
+		_assertOutput( result );
 	});
 
 	it( 'appropriately loads a xlsx file and offers suggestions', async function(){
 		const file = new File('./tests/test-files/basic.xlsx');
-		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer, { rowCount: 6 } );
-		_assertOutput( results );
+		const result = await transform.prepareColumnMappingInfo( file, basicCsvTransformer, { rowCount: 3 } );
+		_assertOutput( result );
 	});
 
 	it( 'uses column alliases to match the integer column', async function(){
 		const file = new File('./tests/test-files/basic.xlsx');
-		const results = await transform.prepareColumnMappingInfo( file, {
+		const result = await transform.prepareColumnMappingInfo( file, {
 			columns: [
 				{
 					name: 'Not an obvious Match',
@@ -86,14 +86,14 @@ describe( 'prepareColumnMappingInfo', function(){
 					type: 'string'
 				}
 			]
-		}, { rowCount: 6 } );
+		}, { rowCount: 3 } );
 		
-		const firstResult = results[0].possibleInputFileColumns[0];
+		const firstResult = result.suggestions[0].possibleInputFileColumns[0];
 		assert.equal( firstResult.inputColumnName, 'integer' );
 		assert.isTrue( firstResult.isLikelyMatch );
 
 		// nothing else should be a likely match
-		const otherResults = results[0].possibleInputFileColumns.slice(1);
+		const otherResults = result.suggestions[0].possibleInputFileColumns.slice(1);
 		for( let result of otherResults ){
 			assert.isFalse( result.isLikelyMatch );
 		}
