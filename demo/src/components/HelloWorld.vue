@@ -16,12 +16,25 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="row" v-if="extractions">
+			<div class="col">
+				<h3>Extractions</h3>
+				<table class="table">
+					<tr v-for="( value, key ) in extractions" :key="key">
+						<th>{{key}}</th>
+						<td>{{value}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
 		
 		<div class="row" v-if="columnMappings">
 			<div class="col">
+				<h3>Columns</h3>
 				<table class="table">
 					<tr>
-						<th>Field</th>
+						<th></th>
 						<th>matches column from<br/><small>{{filename}}</small></th>
 					</tr>
 					<tr v-for="column in columnMappings" :key="column.name">
@@ -65,7 +78,8 @@ export default {
 			dragging: false,
 			columnMappings: null,
 			filename: null,
-			columnSelections: {}
+			columnSelections: {},
+			extractions: null
 		};
   },
   methods: {
@@ -135,10 +149,10 @@ export default {
 					name: 'ORP Solution mV',
 					outputKeyName: 'orp_solution_mv',
 					cell: {
-						row: 11,
-						col: 'E' // or 5
+						col: 'E',
+						row: 11
 					},
-					regexp: {
+					regex: {
 						match: /^([\d\.]*)\s.*/g,
 						replace: '$1'
 					},
@@ -148,11 +162,11 @@ export default {
 					name: 'pH Solution ( 4 or 10 )',
 					outputKeyName: 'ph_n',
 					cell: {
-						row: 10,
-						col: 'C' // or 3
+						col: 'C',
+						row: 10
 					},
-					regexp: {
-						match: /^pH\s(\d*)\s.*/gi,
+					regex: {
+						match: /^pH\s(\d*)\s.*$/gi,
 						replace: '$1'
 					},
 					type: 'float'
@@ -165,7 +179,9 @@ export default {
 			}
 		});
 
-		this.columnMappings = result;
+		this.columnMappings = result.suggestions;
+		this.extractions = result.extractions;
+
 		console.log("RESULT", result );
 		for( let column of this.columnMappings ){
 			const candidate = column.possibleInputFileColumns[0];
