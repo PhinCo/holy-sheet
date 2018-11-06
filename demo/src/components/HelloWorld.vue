@@ -24,23 +24,24 @@
 						<th>Field</th>
 						<th>matches column from<br/><small>{{filename}}</small></th>
 					</tr>
-					<tr v-for="column in columnMappings" :key="column.columnName">
+					<tr v-for="column in columnMappings" :key="column.name">
 						<td>
 							<strong>{{column.name}}</strong><br/>
 							<small>{{column.description}}</small>
 						</td>
 						<td class="chooseColumn">
-							<div class="currentSelection" v-if="columnSelections[column.columnName]">
-								<strong>{{columnSelections[column.columnName].inputColumnName}}</strong><br/>
-								<small>{{columnSelections[column.columnName].exampleData.join(', ')}}</small>
+							<div class="currentSelection" v-if="columnSelections[column.name]">
+								<strong>{{columnSelections[column.name].inputColumnName}}</strong><br/>
+								<small>{{columnSelections[column.name].exampleData.join(', ')}}</small>
 							</div>
 							<div v-else>
 								Skipped
 							</div>
 							<b-dropdown class="columnDropdown" variant="outline-secondary" size="sm">
-								<b-dropdown-item class="columnSelection" v-for="possible in column.possibleInputFileColumns" :key="column.columnName + '-' + possible.inputColumnName" @click="select( column, possible )">
+								<b-dropdown-item class="columnSelection" v-for="possible in column.possibleInputFileColumns" :key="column.name + '-' + possible.inputColumnName" @click="select( column, possible )">
 									{{possible.inputColumnName}}<br/>
 									<small>{{possible.exampleData.join(', ')}}</small>
+									{{possible.nameSimilarity}}
 								</b-dropdown-item>
 								<b-dropdown-divider></b-dropdown-divider>
 								<b-dropdown-item @click="deselect( column )">Skip Column</b-dropdown-item>
@@ -101,16 +102,9 @@ export default {
 					type: 'float'
 				},
 				{
-					name: 'pH 4 mv',
-					aliases: ['pH 4 Buffer Value (mV)'],
-					outputKeyName: 'ph_4_mv',
-					description: 'Use this field to provide helpful information',
-					type: 'float'
-				},
-				{
-					name: 'pH 10 mv',
-					aliases: ['pH 10 Buffer Value (mV)'],
-					outputKeyName: 'ph_10_mv',
+					name: 'pH N mv',
+					aliases: ['pH 4 Buffer Value (mV)', 'pH 10 Buffer Value (mV)'],
+					outputKeyName: 'ph_n_mv',
 					description: 'Use this field to provide helpful information',
 					type: 'float'
 				},
@@ -166,12 +160,13 @@ export default {
 			],
 			visitRow( row, metadata, extractions ){
 				row.orp_solution_mv = extractions.orp_solution_mv;
-				row.ph_n = extractions.ph_n;
+				row.ph_n_value = extractions.ph_n;
 				return row;
 			}
 		});
-		this.columnMappings = result;
 
+		this.columnMappings = result;
+		console.log("RESULT", result );
 		for( let column of this.columnMappings ){
 			const candidate = column.possibleInputFileColumns[0];
 			if( candidate.isLikelyMatch ) this.select( column, candidate );
@@ -182,10 +177,10 @@ export default {
 
 	},
 	select( column, columnMapping ){
-		this.$set( this.columnSelections, column.columnName, columnMapping ); // need to use $set or reactivity doesn't work
+		this.$set( this.columnSelections, column.name, columnMapping ); // need to use $set or reactivity doesn't work
 	},
 	deselect( column ){
-		this.$set( this.columnSelections, column.columnName, null );
+		this.$set( this.columnSelections, column.name, null );
 	}
   }
 }
