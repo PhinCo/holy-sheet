@@ -87,50 +87,50 @@ export default {
 			skipRowsFromHeader: [1, 2, 3],
 			columns: [
 				{
-					columnName: 'Serial Number',
-					columnNameAliases: ['DATE CODE/SERIAL#'],
+					name: 'Serial Number',
+					aliases: ['DATE CODE/SERIAL#'],
 					outputKeyName: 'serial_number',
 					description: 'Use this field to provide helpful information',
 					type: 'string',
 				},
 				{
-					columnName: 'pH 7 mv',
-					columnNameAliases: ['pH 7 Buffer Value (mV)'],
+					name: 'pH 7 mv',
+					aliases: ['pH 7 Buffer Value (mV)'],
 					outputKeyName: 'ph_7_mv',
 					description: 'Use this field to provide helpful information',
 					type: 'float'
 				},
 				{
-					columnName: 'pH 4 mv',
-					columnNameAliases: ['pH 4 Buffer Value (mV)'],
+					name: 'pH 4 mv',
+					aliases: ['pH 4 Buffer Value (mV)'],
 					outputKeyName: 'ph_4_mv',
 					description: 'Use this field to provide helpful information',
 					type: 'float'
 				},
 				{
-					columnName: 'pH 10 mv',
-					columnNameAliases: ['pH 10 Buffer Value (mV)'],
+					name: 'pH 10 mv',
+					aliases: ['pH 10 Buffer Value (mV)'],
 					outputKeyName: 'ph_10_mv',
 					description: 'Use this field to provide helpful information',
 					type: 'float'
 				},
 				{
-					columnName: 'pH Slope',
-					columnNameAliases: ['Slope (calculated)'],
+					name: 'pH Slope',
+					aliases: ['Slope (calculated)'],
 					outputKeyName: 'ph_slope_mv',
 					description: 'Use this field to provide helpful information',
 					type: 'float'
 				},
 				{
-					columnName: 'ORP mV',
-					columnNameAliases: ['ORP (mV) in Zobells'],
+					name: 'ORP mV',
+					aliases: ['ORP (mV) in Zobells'],
 					outputKeyName: 'orp_mv',
 					description: 'Use this field to provide helpful information',
 					type: 'float'
 				},
 				{
-					columnName: 'Temperature ( therm kOhm )',
-					columnNameAliases: ['Temperature (kohm)'],
+					name: 'Temperature ( therm kOhm )',
+					aliases: ['Temperature (kohm)'],
 					outputKeyName: 'temp_kohm',
 					description: 'Use this field to provide helpful information',
 					type: 'float'

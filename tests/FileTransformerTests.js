@@ -8,7 +8,7 @@ describe('FileTransformer', function(){
 		const transformer = {
 			columns: [
 				{
-					columnName: 'string',
+					name: 'string',
 					type: 'string'
 				}
 			]

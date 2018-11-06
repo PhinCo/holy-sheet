@@ -10,7 +10,7 @@ describe('XLSX reader', function(){
 			headerRowNumber: 5,
 			columns: [
 				{
-					columnName: 'string',
+					name: 'string',
 					type: 'string'
 				}
 			],
@@ -32,8 +32,6 @@ describe('XLSX reader', function(){
 						row: 3,
 					},
 					type: 'integer',
-					replacementRegex: /^([\d\.]*)\s.*/g,
-					replacementString: '$1',
 					regexp: {
 						match: /^([\d\.]*)\s.*/g,
 						replace: '$1'

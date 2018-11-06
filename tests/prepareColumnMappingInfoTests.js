@@ -7,7 +7,7 @@ describe( 'prepareColumnMappingInfo', function(){
 	function _assertOutput( results ){
 		const [stringResult, dateResult, integerResult, floatResult, booleanResult, enumResult] = results;
 
-		assert.equal( stringResult.columnName, 'String' );
+		assert.equal( stringResult.name, 'String' );
 		assert.equal( stringResult.description, 'tis but a string' );
 		assert.lengthOf( stringResult.possibleInputFileColumns, 6 );
 
@@ -38,27 +38,27 @@ describe( 'prepareColumnMappingInfo', function(){
 
 
 		
-		assert.equal( dateResult.columnName, 'Date' );
+		assert.equal( dateResult.name, 'Date' );
 		assert.lengthOf( dateResult.possibleInputFileColumns, 6 );
 		assert.isTrue( dateResult.possibleInputFileColumns[0].isLikelyMatch );
 		assert.equal( dateResult.possibleInputFileColumns[0].inputColumnName, 'date' );
 
-		assert.equal( integerResult.columnName, 'Integer' );
+		assert.equal( integerResult.name, 'Integer' );
 		assert.lengthOf( integerResult.possibleInputFileColumns, 6 );
 		assert.isTrue( integerResult.possibleInputFileColumns[0].isLikelyMatch );
 		assert.equal( integerResult.possibleInputFileColumns[0].inputColumnName, 'integer' );
 
-		assert.equal( floatResult.columnName, 'Float' );
+		assert.equal( floatResult.name, 'Float' );
 		assert.lengthOf( floatResult.possibleInputFileColumns, 6 );
 		assert.isTrue( floatResult.possibleInputFileColumns[0].isLikelyMatch );
 		assert.equal( floatResult.possibleInputFileColumns[0].inputColumnName, 'float' );
 
-		assert.equal( booleanResult.columnName, 'Boolean' );
+		assert.equal( booleanResult.name, 'Boolean' );
 		assert.lengthOf( booleanResult.possibleInputFileColumns, 6 );
 		assert.isTrue( booleanResult.possibleInputFileColumns[0].isLikelyMatch );
 		assert.equal( booleanResult.possibleInputFileColumns[0].inputColumnName, 'boolean' );
 
-		assert.equal( enumResult.columnName, 'Enum' );
+		assert.equal( enumResult.name, 'Enum' );
 		assert.lengthOf( enumResult.possibleInputFileColumns, 6 );
 		assert.isTrue( enumResult.possibleInputFileColumns[0].isLikelyMatch );
 		assert.equal( enumResult.possibleInputFileColumns[0].inputColumnName, 'enum' );
@@ -81,8 +81,8 @@ describe( 'prepareColumnMappingInfo', function(){
 		const results = await transform.prepareColumnMappingInfo( file, {
 			columns: [
 				{
-					columnName: 'Not an obvious Match',
-					columnNameAliases: ['not a match', 'integer', 'still not a match'],
+					name: 'Not an obvious Match',
+					aliases: ['not a match', 'integer', 'still not a match'],
 					type: 'string'
 				}
 			]

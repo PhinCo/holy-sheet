@@ -3,34 +3,34 @@
 module.exports = {
 	columns: [
 		{
-			columnName: 'String',
+			name: 'String',
 			description: 'tis but a string',
 			type: 'string'
 		},
 		{
-			columnName: 'Date',
+			name: 'Date',
 			type: 'date',
 			inputFormat: 'MM/DD/YY',
 			outputFormat: 'YYYY-MM-DD'
 		},
 		{
-			columnName: 'Integer',
+			name: 'Integer',
 			type: 'integer',
 			min: 5,
 			max: 700
 		},
 		{
-			columnName: 'Float',
+			name: 'Float',
 			type: 'float',
 			min: 5.1,
 			max: 700.6
 		},
 		{
-			columnName: 'Boolean',
+			name: 'Boolean',
 			type: 'boolean'
 		},
 		{
-			columnName: 'Enum',
+			name: 'Enum',
 			type: 'enum',
 			allowedValues: ['cats', 'dogs', 'pandas'],
 			multiple: true
