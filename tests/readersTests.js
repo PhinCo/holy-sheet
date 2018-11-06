@@ -32,8 +32,8 @@ describe('XLSX reader', function(){
 						row: 3,
 					},
 					type: 'integer',
-					regexp: {
-						match: /^([\d\.]*)\s.*/g,
+					regex: {
+						match: /^.*\(([^\)]+)\)$/g,
 						replace: '$1'
 					},
 				}

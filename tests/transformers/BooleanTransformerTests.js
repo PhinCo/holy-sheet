@@ -28,5 +28,20 @@ describe( 'BooleanTransformer', function(){
 		assert.isFalse( transformer.transform( 0 ) );
 		assert.isFalse( transformer.transform( false ) );
 	});
+
+	it( 'allows regex', async function(){
+		const transformer = new BooleanTransformer( {
+			name: 'boolean',
+			regex: {
+				match: /^-*([01])-*$/gi,
+				replace: '$1'
+			},
+			inputFormat: 'DD-MM-YYYY',
+			outputFormat: 'YYYY-MM-DD'
+		});
+
+		assert.isTrue( transformer.transform( '---1----' ) );
+		assert.isFalse( transformer.transform( '---0----' ) );
+	});
 	
 });

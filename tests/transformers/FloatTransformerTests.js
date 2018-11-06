@@ -55,5 +55,19 @@ describe( 'FloatTransformer', function(){
 		assert.strictEqual( transformer.transform( '20.0' ), 20.0 );
 		assert.strictEqual( transformer.transform( '20.00000000000000000001' ), 20.0 );
 	});
+
+	it( 'allows regex', async function(){
+		const transformer = new FloatTransformer( {
+			name: 'integer',
+			regex: {
+				match: /^-([\d\.]+)-$/gi,
+				replace: '$1'
+			}
+		});
+
+		assert.strictEqual( transformer.transform( '-4.1-' ), 4.1 );
+		assert.strictEqual( transformer.transform( '-5.09-' ), 5.09 );
+		assert.strictEqual( transformer.transform( '-.09-' ), 0.09 );
+	});
 	
 });

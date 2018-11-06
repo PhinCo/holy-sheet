@@ -26,7 +26,7 @@
 					</tr>
 					<tr v-for="column in columnMappings" :key="column.columnName">
 						<td>
-							<strong>{{column.columnName}}</strong><br/>
+							<strong>{{column.name}}</strong><br/>
 							<small>{{column.description}}</small>
 						</td>
 						<td class="chooseColumn">

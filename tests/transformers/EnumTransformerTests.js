@@ -17,7 +17,8 @@ describe( 'EnumTransformer', function(){
 		const transformer = new EnumTransformer( {
 			name: 'enum',
 			allowedValues: ['one', 'two', 'three'],
-			multiple: true
+			multiple: true,
+			outputDelimeter: ', '
 		} );
 
 		const cleanedOutput = 'one, three, two'; // out of order due to alphabetical sort
@@ -29,7 +30,8 @@ describe( 'EnumTransformer', function(){
 	it( 'blows up if multiple are received but not allowed', async function(){
 		const transformer = new EnumTransformer( {
 			name: 'enum',
-			allowedValues: ['one']
+			allowedValues: ['one'],
+			outputDelimeter: ','
 		} );
 		
 		assert.throws( () => {
@@ -42,7 +44,8 @@ describe( 'EnumTransformer', function(){
 			name: 'enum',
 			allowedValues: ['one', 'two', 'three'],
 			multiple: true,
-			excludeInvalidValues: true
+			excludeInvalidValues: true,
+			outputDelimeter: ', '
 		} );
 
 		const cleanedOutput = 'one, three, two'; // out of order due to alphabetical sort
@@ -54,7 +57,8 @@ describe( 'EnumTransformer', function(){
 			name: 'enum',
 			allowedValues: ['one', 'two', 'three'],
 			multiple: true,
-			inputDelimeter: '|'
+			inputDelimeter: '|',
+			outputDelimeter: ', '
 		} );
 
 		const cleanedOutput = 'one, three, two'; // out of order due to alphabetical sort
@@ -70,6 +74,20 @@ describe( 'EnumTransformer', function(){
 		} );
 
 		assert.equal( transformer.transform( 'three;two;one' ), 'one|three|two' );
+	});
+
+	it( 'allows regex', async function(){
+		const transformer = new EnumTransformer( {
+			name: 'enum',
+			allowedValues: ['1', '2', '3'],
+			multiple: true,
+			regex: {
+				match: /^\+([\d,]+)\+$/gi,
+				replace: '$1'
+			}
+		});
+
+		assert.deepEqual( transformer.transform( '+1,2+' ), ['1', '2'] );
 	});
 	
 });

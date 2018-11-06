@@ -33,7 +33,8 @@ module.exports = {
 			name: 'Enum',
 			type: 'enum',
 			allowedValues: ['cats', 'dogs', 'pandas'],
-			multiple: true
+			multiple: true,
+			outputDelimeter: ', '
 		}
 	]
 };

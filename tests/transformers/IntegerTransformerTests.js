@@ -51,5 +51,22 @@ describe( 'IntegerTransformer', function(){
 		assert.strictEqual( transformer.transform( '20' ), 20 );
 		assert.strictEqual( transformer.transform( '21' ), 20 );
 	});
+
+	it( 'allows regex', async function(){
+		const transformer = new IntegerTransformer( {
+			name: 'integer',
+			regex: {
+				match: /^-(\d+)-$/gi,
+				replace: '$1'
+			},
+			minValue: 5,
+			maxValue: 20
+		});
+
+		assert.strictEqual( transformer.transform( '-4-' ), 5 );
+		assert.strictEqual( transformer.transform( '-5-' ), 5 );
+		assert.strictEqual( transformer.transform( '-20-' ), 20 );
+		assert.strictEqual( transformer.transform( '-21-' ), 20 );
+	});
 	
 });

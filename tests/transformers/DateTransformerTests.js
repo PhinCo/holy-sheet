@@ -48,5 +48,19 @@ describe( 'DateTransformer', function(){
 		});
 		assert.equal( transformer.transform( '99/02/2018' ), 'INVALID_DATE' );
 	});
+
+	it( 'allows regex', async function(){
+		const transformer = new DateTransformer( {
+			name: 'date',
+			regex: {
+				match: /^-*([\d/]+)-*$/gi,
+				replace: '$1'
+			},
+			inputFormat: 'DD-MM-YYYY',
+			outputFormat: 'YYYY-MM-DD'
+		});
+
+		assert.strictEqual( transformer.transform( '---12/04/1980----' ), '1980-04-12' );
+	});
 	
 });
