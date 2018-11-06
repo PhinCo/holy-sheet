@@ -65,11 +65,101 @@
 			</div>
 		</div>
 
+		<div class="row" v-if="columnMappings">
+			<div class="col">
+				<b-button size="lg" variant="primary" @click="next">Next</b-button>
+			</div>
+		</div>
+
 	</div>
 </template>
 
 <script>
 import holysheet from '../../..'
+
+const transformer = {
+	fileTypes: ['xls'],
+	headerRowNumber: 10,
+	skipRowsFromHeader: [1, 2, 3],
+	columns: [
+		{
+			name: 'Serial Number',
+			aliases: ['DATE CODE/SERIAL#'],
+			outputKeyName: 'serial_number',
+			description: 'Use this field to provide helpful information',
+			type: 'string',
+		},
+		{
+			name: 'pH 7 mv',
+			aliases: ['pH 7 Buffer Value (mV)'],
+			outputKeyName: 'ph_7_mv',
+			description: 'Use this field to provide helpful information',
+			type: 'float'
+		},
+		{
+			name: 'pH N mv',
+			aliases: ['pH 4 Buffer Value (mV)', 'pH 10 Buffer Value (mV)'],
+			outputKeyName: 'ph_n_mv',
+			description: 'Use this field to provide helpful information',
+			type: 'float'
+		},
+		{
+			name: 'pH Slope',
+			aliases: ['Slope (calculated)'],
+			outputKeyName: 'ph_slope_mv',
+			description: 'Use this field to provide helpful information',
+			type: 'float'
+		},
+		{
+			name: 'ORP mV',
+			aliases: ['ORP (mV) in Zobells'],
+			outputKeyName: 'orp_mv',
+			description: 'Use this field to provide helpful information',
+			type: 'float'
+		},
+		{
+			name: 'Temperature ( therm kOhm )',
+			aliases: ['Temperature (kohm)'],
+			outputKeyName: 'temp_kohm',
+			description: 'Use this field to provide helpful information',
+			type: 'float'
+		}
+	],
+	extractions: [
+		{
+			name: 'ORP Solution mV',
+			outputKeyName: 'orp_solution_mv',
+			cell: {
+				col: 'E',
+				row: 11
+			},
+			regex: {
+				match: /^([\d\.]*)\s.*/g,
+				replace: '$1'
+			},
+			type: 'float'
+		},
+		{
+			name: 'pH Solution ( 4 or 10 )',
+			outputKeyName: 'ph_n',
+			cell: {
+				col: 'C',
+				row: 10
+			},
+			regex: {
+				match: /^pH\s(\d*)\s.*$/gi,
+				replace: '$1'
+			},
+			type: 'float'
+		}
+	],
+	visitRow( row, metadata, extractions ){
+		row.orp_solution_mv = extractions.orp_solution_mv;
+		row.ph_n_value = extractions.ph_n;
+		return row;
+	}
+};
+
 
 export default {
   name: 'HelloWorld',
@@ -77,6 +167,7 @@ export default {
 		return {
 			dragging: false,
 			columnMappings: null,
+			file: null,
 			filename: null,
 			columnSelections: {},
 			extractions: null
@@ -94,90 +185,9 @@ export default {
 	},
 	async _drop ( e ) {
 		const files = e.dataTransfer.files
-		const file = files[0]
-		this.filename = file.name
-		const result = await holysheet.prepareColumnMappingInfo( file, {
-			fileTypes: ['xls'],
-			headerRowNumber: 10,
-			skipRowsFromHeader: [1, 2, 3],
-			columns: [
-				{
-					name: 'Serial Number',
-					aliases: ['DATE CODE/SERIAL#'],
-					outputKeyName: 'serial_number',
-					description: 'Use this field to provide helpful information',
-					type: 'string',
-				},
-				{
-					name: 'pH 7 mv',
-					aliases: ['pH 7 Buffer Value (mV)'],
-					outputKeyName: 'ph_7_mv',
-					description: 'Use this field to provide helpful information',
-					type: 'float'
-				},
-				{
-					name: 'pH N mv',
-					aliases: ['pH 4 Buffer Value (mV)', 'pH 10 Buffer Value (mV)'],
-					outputKeyName: 'ph_n_mv',
-					description: 'Use this field to provide helpful information',
-					type: 'float'
-				},
-				{
-					name: 'pH Slope',
-					aliases: ['Slope (calculated)'],
-					outputKeyName: 'ph_slope_mv',
-					description: 'Use this field to provide helpful information',
-					type: 'float'
-				},
-				{
-					name: 'ORP mV',
-					aliases: ['ORP (mV) in Zobells'],
-					outputKeyName: 'orp_mv',
-					description: 'Use this field to provide helpful information',
-					type: 'float'
-				},
-				{
-					name: 'Temperature ( therm kOhm )',
-					aliases: ['Temperature (kohm)'],
-					outputKeyName: 'temp_kohm',
-					description: 'Use this field to provide helpful information',
-					type: 'float'
-				}
-			],
-			extractions: [
-				{
-					name: 'ORP Solution mV',
-					outputKeyName: 'orp_solution_mv',
-					cell: {
-						col: 'E',
-						row: 11
-					},
-					regex: {
-						match: /^([\d\.]*)\s.*/g,
-						replace: '$1'
-					},
-					type: 'float'
-				},
-				{
-					name: 'pH Solution ( 4 or 10 )',
-					outputKeyName: 'ph_n',
-					cell: {
-						col: 'C',
-						row: 10
-					},
-					regex: {
-						match: /^pH\s(\d*)\s.*$/gi,
-						replace: '$1'
-					},
-					type: 'float'
-				}
-			],
-			visitRow( row, metadata, extractions ){
-				row.orp_solution_mv = extractions.orp_solution_mv;
-				row.ph_n_value = extractions.ph_n;
-				return row;
-			}
-		});
+		this.file = files[0]
+		this.filename = this.file.name
+		const result = await holysheet.prepareColumnMappingInfo( this.file, transformer );
 
 		this.columnMappings = result.suggestions;
 		this.extractions = result.extractions;
@@ -187,9 +197,8 @@ export default {
 			const candidate = column.possibleInputFileColumns[0];
 			if( candidate.isLikelyMatch ) this.select( column, candidate );
 		}
-
 	},
-	_fileChanged () {
+	_fileChanged(){
 
 	},
 	select( column, columnMapping ){
@@ -197,6 +206,16 @@ export default {
 	},
 	deselect( column ){
 		this.$set( this.columnSelections, column.name, null );
+	},
+	async next(){
+		const mappings = {};
+		for( let columnName in this.columnSelections ){
+			const column = this.columnSelections[columnName];
+			mappings[columnName] = column.inputColumnName;
+		}
+
+		const result = await holysheet.transform( this.file, transformer, mappings );
+		console.log( result );
 	}
   }
 }
