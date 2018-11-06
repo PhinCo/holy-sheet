@@ -1,11 +1,10 @@
-
-const FloatColumnTransformer = require('../../lib/transformers/FloatColumnTransformer');
-const assert = require('chai').assert;
+import FloatTransformer from '../../lib/transformers/FloatTransformer';
+import { assert } from 'chai';
 
 describe( 'FloatColumnTransformer', function(){
 
 	it( 'works with default settings and integery values', async function(){
-		const transformer = new FloatColumnTransformer( {}, "source" );
+		const transformer = new FloatTransformer( { name: 'float' } );
 		
 		assert.equal( transformer.transform( 1 ), 1 );
 		assert.equal( transformer.transform( 1.1 ), 1.1 );
@@ -19,7 +18,7 @@ describe( 'FloatColumnTransformer', function(){
 	});
 
 	it( 'works with default settings and non-integery values', async function(){
-		const transformer = new FloatColumnTransformer( {}, "source" );
+		const transformer = new FloatTransformer( { name: 'float' } );
 
 		assert.isNull( transformer.transform( 'a' ) );
 		assert.isNull( transformer.transform( 'a' ) );
@@ -29,9 +28,10 @@ describe( 'FloatColumnTransformer', function(){
 	});
 
 	it( 'allows overriding the default value', async function(){
-		const transformer = new FloatColumnTransformer( {
+		const transformer = new FloatTransformer( {
+			name: 'float',
 			defaultValue: -1.1
-		}, "source" );
+		});
 
 		assert.equal( transformer.transform( '1.0' ), 1.0 );
 		assert.equal( transformer.transform( 'a' ), -1.1 );
@@ -40,10 +40,11 @@ describe( 'FloatColumnTransformer', function(){
 	});
 
 	it( 'allows providing min and max values', async function(){
-		const transformer = new FloatColumnTransformer( {
+		const transformer = new FloatTransformer( {
+			name: 'float',
 			minValue: 5,
 			maxValue: 20
-		}, "source" );
+		});
 
 		assert.strictEqual( transformer.transform( '4' ), 5.0 );
 		assert.strictEqual( transformer.transform( '4.9999999999999999999' ), 5.0 );

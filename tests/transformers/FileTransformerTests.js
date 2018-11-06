@@ -1,14 +1,13 @@
+import basicCsvTransformer from '../test-transformers/basic.js';
+import FileTransformer from '../../lib/transformers/FileTransformer';
+import CsvReader from '../../lib/readers/CsvReader';
+import XlsxReader from '../../lib/readers/XlsxReader';
+import { assert } from 'chai';
 
-const FileTransformer = require('../../lib/transformers/FileTransformer');
-const basicCsvTransformer = require('../test-transformers/basic.js');
-const CsvReader = require('../../lib/readers/CsvReader');
-const XlsxReader = require('../../lib/readers/XlsxReader');
-const assert = require('chai').assert;
-
-describe( 'transforming', function(){
+describe( 'FileTransformer', function(){
 
 	const columnMapping = {
-		'String': 'string, string',
+		'String': 'string',
 		'Date': 'date',
 		'Integer': 'integer',
 		'Float': 'float',
@@ -63,8 +62,9 @@ describe( 'transforming', function(){
 	}
 
 	it( 'appropriately loads a csv file and transforms rows', async function(){
-		const reader = new CsvReader( './tests/test-files/basic.csv' );
-		const rows = await reader.readEntireFile();
+		const file = new File('./tests/test-files/basic.csv');
+		const reader = new CsvReader( file, basicCsvTransformer );
+		const { rows } = await reader.readFile();
 		
 		const fileTransformer = new FileTransformer( basicCsvTransformer, columnMapping );
 		const results = await fileTransformer.transformRows( rows );
@@ -73,8 +73,9 @@ describe( 'transforming', function(){
 	});
 
 	it( 'appropriately loads a xlsx file and transforms rows', async function(){
-		const reader = new XlsxReader( './tests/test-files/basic.xlsx' );
-		const rows = await reader.readEntireFile();
+		const file = new File('./tests/test-files/basic.xlsx');
+		const reader = new XlsxReader( file, basicCsvTransformer );
+		const { rows } = await reader.readFile();
 		
 		const fileTransformer = new FileTransformer( basicCsvTransformer, columnMapping );
 		const results = await fileTransformer.transformRows( rows );

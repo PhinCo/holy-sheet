@@ -174,7 +174,7 @@ export default {
 
 		for( let column of this.columnMappings ){
 			const candidate = column.possibleInputFileColumns[0];
-			this.select( column, candidate );
+			if( candidate.isLikelyMatch ) this.select( column, candidate );
 		}
 
 	},

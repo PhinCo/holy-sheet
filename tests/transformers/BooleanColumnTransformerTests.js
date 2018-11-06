@@ -1,11 +1,10 @@
-
-const BooleanColumnTransformer = require('../../lib/transformers/BooleanColumnTransformer');
-const assert = require('chai').assert;
+import BooleanTransformer from '../../lib/transformers/BooleanTransformer';
+import { assert } from 'chai';
 
 describe( 'BooleanColumnTransformer', function(){
 
 	it( 'works with truthy values', async function(){
-		const transformer = new BooleanColumnTransformer( {}, "source" );
+		const transformer = new BooleanTransformer( { name: 'boolean' } );
 		assert.isTrue( transformer.transform('yes') );
 		assert.isTrue( transformer.transform(' yes  ') );
 		assert.isTrue( transformer.transform(' YeS  ') );
@@ -18,7 +17,7 @@ describe( 'BooleanColumnTransformer', function(){
 	});
 	
 	it( 'works with falsey values', async function(){
-		const transformer = new BooleanColumnTransformer( {}, "source" );
+		const transformer = new BooleanTransformer( { name: 'boolean' } );
 		assert.isFalse( transformer.transform( null ) );
 		assert.isFalse( transformer.transform( void 0 ) );
 		assert.isFalse( transformer.transform( NaN ) );

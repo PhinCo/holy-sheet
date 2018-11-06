@@ -21,7 +21,10 @@
 				"@babel/register",
 				"--require",
 				"@babel/polyfill",
-				"${workspaceFolder}/tests/*Tests.js"
+				"--require",
+				"${workspaceFolder}/tests/lib/globals.js",
+				"--recursive",
+				"${workspaceFolder}/tests/**/*Tests.js"
 			],
 			"internalConsoleOptions": "openOnSessionStart"
 		}

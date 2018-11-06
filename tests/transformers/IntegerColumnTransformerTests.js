@@ -1,11 +1,10 @@
-
-const IntegerColumnTransformer = require('../../lib/transformers/IntegerColumnTransformer');
-const assert = require('chai').assert;
+import IntegerTransformer from '../../lib/transformers/IntegerTransformer';
+import { assert } from 'chai';
 
 describe( 'IntegerColumnTransformer', function(){
 
 	it( 'works with default settings and integery values', async function(){
-		const transformer = new IntegerColumnTransformer( {}, "source" );
+		const transformer = new IntegerTransformer( { name: 'integer' } );
 
 		assert.equal( transformer.transform( 1 ), 1 );
 		assert.equal( transformer.transform( 1.1 ), 1 );
@@ -19,7 +18,7 @@ describe( 'IntegerColumnTransformer', function(){
 	});
 
 	it( 'works with default settings and non-integery values', async function(){
-		const transformer = new IntegerColumnTransformer( {}, "source" );
+		const transformer = new IntegerTransformer( { name: 'integer' } );
 
 		assert.isNull( transformer.transform( 'a' ) );
 		assert.isNull( transformer.transform( NaN ) );
@@ -27,9 +26,10 @@ describe( 'IntegerColumnTransformer', function(){
 	});
 	
 	it( 'allows overriding the default value', async function(){
-		const transformer = new IntegerColumnTransformer( {
+		const transformer = new IntegerTransformer( {
+			name: 'integer',
 			defaultValue: -1
-		}, "source" );
+		});
 
 		assert.equal( transformer.transform( '1' ), 1 );
 		assert.equal( transformer.transform( 'a' ), -1 );
@@ -38,10 +38,11 @@ describe( 'IntegerColumnTransformer', function(){
 	});
 
 	it( 'allows providing min and max values', async function(){
-		const transformer = new IntegerColumnTransformer( {
+		const transformer = new IntegerTransformer( {
+			name: 'integer',
 			minValue: 5,
 			maxValue: 20
-		}, "source" );
+		});
 
 		assert.strictEqual( transformer.transform( '4' ), 5 );
 		assert.strictEqual( transformer.transform( '5' ), 5 );

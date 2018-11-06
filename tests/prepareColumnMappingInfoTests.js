@@ -1,7 +1,6 @@
 import transform from '../index';
 import basicCsvTransformer from './test-transformers/basic.js';
 import { assert } from 'chai';
-import fs from 'fs';
 
 describe( 'prepareColumnMappingInfo', function(){
 	
@@ -65,56 +64,40 @@ describe( 'prepareColumnMappingInfo', function(){
 		assert.equal( enumResult.possibleInputFileColumns[0].inputColumnName, 'enum' );
 	}
 
-
-	
 	it( 'appropriately loads a csv file and offers suggestions', async function(){
-		const file = new MockFile('./tests/test-files/basic.csv');
+		const file = new File('./tests/test-files/basic.csv');
 		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer, { rowCount: 6 } );
 		_assertOutput( results );
 	});
 
 	it( 'appropriately loads a xlsx file and offers suggestions', async function(){
-		const file = new MockFile('./tests/test-files/basic.xlsx');
+		const file = new File('./tests/test-files/basic.xlsx');
 		const results = await transform.prepareColumnMappingInfo( file, basicCsvTransformer, { rowCount: 6 } );
 		_assertOutput( results );
+	});
+
+	it( 'uses column alliases to match the integer column', async function(){
+		const file = new File('./tests/test-files/basic.xlsx');
+		const results = await transform.prepareColumnMappingInfo( file, {
+			columns: [
+				{
+					columnName: 'Not an obvious Match',
+					columnNameAliases: ['not a match', 'integer', 'still not a match'],
+					type: 'string'
+				}
+			]
+		}, { rowCount: 6 } );
+		
+		const firstResult = results[0].possibleInputFileColumns[0];
+		assert.equal( firstResult.inputColumnName, 'integer' );
+		assert.isTrue( firstResult.isLikelyMatch );
+
+		// nothing else should be a likely match
+		const otherResults = results[0].possibleInputFileColumns.slice(1);
+		for( let result of otherResults ){
+			assert.isFalse( result.isLikelyMatch );
+		}
 	});
 	
 });
 
-class MockFile{
-	constructor( filepath ){
-		const path = require('path');
-		this.filepath = filepath;
-		this.name = path.basename( filepath );
-	}
-}
-class MockFileReaderSync {
-	readAsText( file ){
-		return fs.readFileSync( file.filepath, { encoding: 'utf8' } );
-	}
-}
-
-class MockFileReader {
-
-	readAsText( file ){
-		const data = fs.readFileSync( file.filepath, { encoding: 'utf8' });
-		this.onload({
-			target: {
-				result: data
-			}
-		});
-	}
-
-	readAsBinaryString( file ){
-		const binary = fs.readFileSync( file.filepath, { encoding: 'binary' });
-		this.onload({
-			target: {
-				result: binary.toString()
-			}
-		});
-	}
-}
-
-global.File = MockFile;
-global.FileReaderSync = MockFileReaderSync;
-global.FileReader = MockFileReader;
