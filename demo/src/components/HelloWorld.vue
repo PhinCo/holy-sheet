@@ -17,7 +17,7 @@
 			</div>
 		</div>
 
-		<div class="row" v-if="extractions">
+		<div class="row" v-if="extractions && !previewRows">
 			<div class="col">
 				<h3>Extractions</h3>
 				<table class="table">
@@ -70,10 +70,15 @@
 		<div class="row" v-if="previewRows">
 			<div class="col">
 				<table class="table">
+					<tr>
+						<th v-for="( value, index ) in previewHeaders" :key="index">{{value}}</th>
+					</tr>
 					<tr v-for="(row, index) in previewRows" :key="index">
-						<td></td>
+						<td v-for="( header, index ) in previewHeaders" :key="index">{{row[header]}}</td>
 					</tr>
 				</table>
+				<br/>
+				<b-button size="lg" variant="primary" @click="submit">Submit</b-button>
 			</div>
 		</div>
 
@@ -174,6 +179,7 @@ export default {
 		return {
 			dragging: false,
 			columnMappings: null,
+			colmnMappingHeaders: null,
 			file: null,
 			columnSelections: {},
 			extractions: null,
@@ -196,6 +202,7 @@ export default {
 
 		// Caching the read result so i can use it later - don't want it to be reactive for performance reasons
 		this.readResult = await holysheet.readFileForTransformer( this.file, transformer );
+		console.log( "read result", this.readResult );
 
 		const { suggestions, extractions } = await holysheet.prepareColumnMappingInfo( this.readResult );
 
@@ -227,7 +234,22 @@ export default {
 		this.transformedRows = await holysheet.transform( this.readResult, mappings );
 		console.log( this.transformedRows );
 
-		this.previewRows = this.transformedRows
+		this.previewRows = this.transformedRows.slice( 0, 10 );
+
+		const columnMappingHeaders = _.map( this.columnMappings, function( columnMapping ){
+			return columnMapping.name;
+		});
+
+		const keysFromFirstRow = Object.keys( this.previewRows[0] );
+
+		const extraKeys = []
+		for( let key of keysFromFirstRow ){
+			if( columnMappingHeaders.indexOf( key ) === -1 ){
+				extraKeys.push( key );
+			}
+		}
+
+		this.previewHeaders = [...columnMappingHeaders, ...extraKeys];
 	}
   }
 }
