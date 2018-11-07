@@ -35,7 +35,7 @@
 				<table class="table">
 					<tr>
 						<th></th>
-						<th>matches column from<br/><small>{{filename}}</small></th>
+						<th>matches column from<br/><small>{{file.name}}</small></th>
 					</tr>
 					<tr v-for="column in columnMappings" :key="column.name">
 						<td>
@@ -168,7 +168,6 @@ export default {
 			dragging: false,
 			columnMappings: null,
 			file: null,
-			filename: null,
 			columnSelections: {},
 			extractions: null
 		};
@@ -186,13 +185,15 @@ export default {
 	async _drop ( e ) {
 		const files = e.dataTransfer.files
 		this.file = files[0]
-		this.filename = this.file.name
-		const result = await holysheet.prepareColumnMappingInfo( this.file, transformer );
 
-		this.columnMappings = result.suggestions;
-		this.extractions = result.extractions;
+		// Caching the read result so i can use it later - don't want it to be reactive for performance reasons
+		this.readResult = await holysheet.readFileForTransformer( this.file, transformer );
 
-		console.log("RESULT", result );
+		const { suggestions, extractions } = await holysheet.prepareColumnMappingInfo( this.readResult );
+
+		this.columnMappings = suggestions;
+		this.extractions = extractions;
+
 		for( let column of this.columnMappings ){
 			const candidate = column.possibleInputFileColumns[0];
 			if( candidate.isLikelyMatch ) this.select( column, candidate );
@@ -213,8 +214,9 @@ export default {
 			const column = this.columnSelections[columnName];
 			mappings[columnName] = column.inputColumnName;
 		}
-console.log("panning", mappings);
-		const result = await holysheet.transform( this.file, transformer, mappings );
+
+		console.log("mappings", mappings, this.readResult);
+		const result = await holysheet.transform( this.readResult, mappings );
 		console.log( result );
 	}
   }
