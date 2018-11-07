@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import readerForFile from './../lib/readers';
 const { resolve } = require('path');
+import holysheet from '../index';
 
 describe('XLSX reader', function(){
 
@@ -41,29 +41,34 @@ describe('XLSX reader', function(){
 		};
 
 		const file = new File( resolve( __dirname, './test-files/extractions.xlsx') );
-		const Reader = readerForFile( file );
-		const reader = new Reader( file, transformer, { rowCount: 2 } );
-		const { rows, extractions } = await reader.readFile();
+		const readResult = await holysheet.readFileForTransformer( file, transformer );
 
-		assert.lengthOf( rows, 2 );
+		const { dataRows, extractions, columnHeaders, transformer: outputTransformer } = readResult;
 
-		const row1 = rows[0];
+		assert.isOk( outputTransformer );
+
+		assert.deepEqual( columnHeaders, ['header 1', 'header 2', 'header 3'] );
+
+		assert.equal( extractions['simple'], 'simple extraction' );
+		assert.equal( extractions['regex'], 2343 );
+
+
+		assert.lengthOf( dataRows, 3 );
+
+		const row1 = dataRows[0];
 		assert.equal( row1['header 1'], 'row1:value1' );
 		assert.equal( row1['header 2'], 'row1:value2' );
 		assert.equal( row1['header 3'], 'row1:value3' );
 
-		const row2 = rows[1];
+		const row2 = dataRows[1];
 		assert.equal( row2['header 1'], 'row2:value1' );
 		assert.equal( row2['header 2'], 'row2:value2' );
 		assert.equal( row2['header 3'], 'row2:value3' );
 
-		// const row3 = rows[2];
-		// assert.equal( row3['header 1'], 'row3:value1' );
-		// assert.equal( row3['header 2'], 'row3:value2' );
-		// assert.equal( row3['header 3'], 'row3:value3' );
-
-		assert.equal( extractions['simple'], 'simple extraction' );
-		assert.equal( extractions['regex'], 2343 );
+		const row3 = dataRows[2];
+		assert.equal( row3['header 1'], 'row3:value1' );
+		assert.equal( row3['header 2'], 'row3:value2' );
+		assert.equal( row3['header 3'], 'row3:value3' );
 	});
 
 });
@@ -107,29 +112,34 @@ describe('CSV reader', function(){
 		};
 
 		const file = new File( resolve( __dirname, './test-files/extractions.csv') );
-		const Reader = readerForFile( file );
-		const reader = new Reader( file, transformer, { rowCount: 2 } );
-		const { rows, extractions } = await reader.readFile();
+		const readResult = await holysheet.readFileForTransformer( file, transformer );
 
-		assert.lengthOf( rows, 2 );
+		const { dataRows, extractions, columnHeaders, transformer: outputTransformer } = readResult;
 
-		const row1 = rows[0];
+		assert.isOk( outputTransformer );
+
+		assert.deepEqual( columnHeaders, ['header 1', 'header 2', 'header 3'] );
+
+		assert.equal( extractions['simple'], 'simple extraction' );
+		assert.equal( extractions['regex'], 2343 );
+
+
+		assert.lengthOf( dataRows, 3 );
+
+		const row1 = dataRows[0];
 		assert.equal( row1['header 1'], 'row1:value1' );
 		assert.equal( row1['header 2'], 'row1:value2' );
 		assert.equal( row1['header 3'], 'row1:value3' );
 
-		const row2 = rows[1];
+		const row2 = dataRows[1];
 		assert.equal( row2['header 1'], 'row2:value1' );
 		assert.equal( row2['header 2'], 'row2:value2' );
 		assert.equal( row2['header 3'], 'row2:value3' );
 
-		// const row3 = rows[2];
-		// assert.equal( row3['header 1'], 'row3:value1' );
-		// assert.equal( row3['header 2'], 'row3:value2' );
-		// assert.equal( row3['header 3'], 'row3:value3' );
-
-		assert.equal( extractions['simple'], 'simple extraction' );
-		assert.equal( extractions['regex'], 2343 );
+		const row3 = dataRows[2];
+		assert.equal( row3['header 1'], 'row3:value1' );
+		assert.equal( row3['header 2'], 'row3:value2' );
+		assert.equal( row3['header 3'], 'row3:value3' );
 	});
 
 });

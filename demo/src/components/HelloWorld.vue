@@ -213,7 +213,7 @@ export default {
 			const column = this.columnSelections[columnName];
 			mappings[columnName] = column.inputColumnName;
 		}
-
+console.log("panning", mappings);
 		const result = await holysheet.transform( this.file, transformer, mappings );
 		console.log( result );
 	}
