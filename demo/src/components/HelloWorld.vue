@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		
-		<div class="row" v-if="columnMappings">
+		<div class="row" v-if="columnMappings && !previewRows">
 			<div class="col">
 				<h3>Columns</h3>
 				<table class="table">
@@ -62,12 +62,18 @@
 						</td>
 					</tr>
 				</table>
+				<br/>
+				<b-button size="lg" variant="primary" @click="next">Next</b-button>
 			</div>
 		</div>
 
-		<div class="row" v-if="columnMappings">
+		<div class="row" v-if="previewRows">
 			<div class="col">
-				<b-button size="lg" variant="primary" @click="next">Next</b-button>
+				<table class="table">
+					<tr v-for="(row, index) in previewRows" :key="index">
+						<td></td>
+					</tr>
+				</table>
 			</div>
 		</div>
 
@@ -153,9 +159,10 @@ const transformer = {
 			type: 'float'
 		}
 	],
-	visitRow( row, metadata, extractions ){
+	visitRow( row, extractions ){
 		row.orp_solution_mv = extractions.orp_solution_mv;
 		row.ph_n_value = extractions.ph_n;
+		row[`pH ${extractions.ph_n} mv`] = row['pH N mv'];
 		return row;
 	}
 };
@@ -169,7 +176,8 @@ export default {
 			columnMappings: null,
 			file: null,
 			columnSelections: {},
-			extractions: null
+			extractions: null,
+			previewRows: null
 		};
   },
   methods: {
@@ -216,8 +224,10 @@ export default {
 		}
 
 		console.log("mappings", mappings, this.readResult);
-		const result = await holysheet.transform( this.readResult, mappings );
-		console.log( result );
+		this.transformedRows = await holysheet.transform( this.readResult, mappings );
+		console.log( this.transformedRows );
+
+		this.previewRows = this.transformedRows
 	}
   }
 }
