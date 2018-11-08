@@ -17,6 +17,7 @@ describe('XLSX reader', function(){
 			extractions: [
 				{
 					name: 'simple extraction',
+					description: 'testing a simple extraction',
 					outputKeyName: 'simple',
 					cell: {
 						col: 'C', 
@@ -26,6 +27,7 @@ describe('XLSX reader', function(){
 				},
 				{
 					name: 'regex extraction',
+					description: 'testing a regex extraction',
 					outputKeyName: 'regex',
 					cell: {
 						col: 'C', 
@@ -49,8 +51,15 @@ describe('XLSX reader', function(){
 
 		assert.deepEqual( columnHeaders, ['header 1', 'header 2', 'header 3'] );
 
-		assert.equal( extractions['simple'], 'simple extraction' );
-		assert.equal( extractions['regex'], 2343 );
+		const { value: simpleExtractionValue, name: simpleExtractionName, description: simpleExtractionDescription } = extractions['simple'];
+		assert.equal( simpleExtractionValue, 'simple extraction' );
+		assert.equal( simpleExtractionName, 'simple extraction' );
+		assert.equal( simpleExtractionDescription, 'testing a simple extraction' );
+
+		const { value: regexExtractionValue, name: regexExtractionName, description: regexExtractionDescription } = extractions['regex'];
+		assert.equal( regexExtractionValue, 2343 );
+		assert.equal( regexExtractionName, 'regex extraction' );
+		assert.equal( regexExtractionDescription, 'testing a regex extraction' );
 
 
 		assert.lengthOf( dataRows, 3 );
@@ -88,6 +97,7 @@ describe('CSV reader', function(){
 			extractions: [
 				{
 					name: 'simple extraction',
+					description: 'testing a simple extraction',
 					outputKeyName: 'simple',
 					cell: {
 						col: 3, 
@@ -97,6 +107,7 @@ describe('CSV reader', function(){
 				},
 				{
 					name: 'regex extraction',
+					description: 'testing a regex extraction',
 					outputKeyName: 'regex',
 					cell: {
 						col: 3, 
@@ -120,8 +131,15 @@ describe('CSV reader', function(){
 
 		assert.deepEqual( columnHeaders, ['header 1', 'header 2', 'header 3'] );
 
-		assert.equal( extractions['simple'], 'simple extraction' );
-		assert.equal( extractions['regex'], 2343 );
+		const { value: simpleExtractionValue, name: simpleExtractionName, description: simpleExtractionDescription } = extractions['simple'];
+		assert.equal( simpleExtractionValue, 'simple extraction' );
+		assert.equal( simpleExtractionName, 'simple extraction' );
+		assert.equal( simpleExtractionDescription, 'testing a simple extraction' );
+
+		const { value: regexExtractionValue, name: regexExtractionName, description: regexExtractionDescription } = extractions['regex'];
+		assert.equal( regexExtractionValue, 2343 );
+		assert.equal( regexExtractionName, 'regex extraction' );
+		assert.equal( regexExtractionDescription, 'testing a regex extraction' );
 
 
 		assert.lengthOf( dataRows, 3 );

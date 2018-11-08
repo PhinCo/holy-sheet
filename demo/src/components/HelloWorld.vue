@@ -1,29 +1,19 @@
 <template>
 	<div>
-		<div class="row">
+		<div class="row" v-show="!file">
 			<div class="col">
-				<div 
-					ref="dropElement"
-					class="dropElement"
-					:class="{ dragging: dragging }"
-					draggable="true"
-					@dragenter.stop.prevent="_dragEnter"
-					@dragleave.stop.prevent="_dragLeave"
-					@dragover.stop.prevent="_dragOver"
-					@drop.stop.prevent="_drop"
-				>
-				<b-form-file ref="fileInput" placeholder="Choose a file..." @change.stop.prevent="_fileChanged" ></b-form-file>
-				</div>
+				<drop-zone ref="dropZone" @file-changed="_fileChanged"></drop-zone>
 			</div>
 		</div>
 
 		<div class="row" v-if="extractions && !previewRows">
 			<div class="col">
-				<h3>Extractions</h3>
+				<h3>Metadata</h3>
 				<table class="table">
-					<tr v-for="( value, key ) in extractions" :key="key">
-						<th>{{key}}</th>
-						<td>{{value}}</td>
+					<tr v-for="( extraction, key ) in extractions" :key="key">
+						<th>{{extraction.name}}<br/><small>{{key}}</small></th>
+						<td>{{extraction.description}}</td>
+						<td>{{extraction.value}}</td>
 					</tr>
 				</table>
 			</div>
@@ -35,7 +25,7 @@
 				<table class="table">
 					<tr>
 						<th></th>
-						<th>matches column from<br/><small>{{file.name}}</small></th>
+						<th>match to column of<br/><b-badge variant="primary">{{file.name}}</b-badge></th>
 					</tr>
 					<tr v-for="column in columnMappings" :key="column.name">
 						<td>
@@ -54,21 +44,23 @@
 								<b-dropdown-item class="columnSelection" v-for="possible in column.possibleInputFileColumns" :key="column.name + '-' + possible.inputColumnName" @click="select( column, possible )">
 									{{possible.inputColumnName}}<br/>
 									<small>{{possible.exampleData.join(', ')}}</small>
-									{{possible.nameSimilarity}}
 								</b-dropdown-item>
-								<b-dropdown-divider></b-dropdown-divider>
-								<b-dropdown-item @click="deselect( column )">Skip Column</b-dropdown-item>
 							</b-dropdown>
 						</td>
 					</tr>
 				</table>
 				<br/>
-				<b-button size="lg" variant="primary" @click="next">Next</b-button>
+				<b-button size="lg" variant="outline-secondary" class="mr-2" @click="startOver">Start Over</b-button>
+				<b-button size="lg" variant="primary" @click="previewTransformations">Next</b-button>
 			</div>
 		</div>
 
 		<div class="row" v-if="previewRows">
 			<div class="col">
+				<h3>Transformed {{transformedRowsCount}} rows</h3>
+				<br>
+				
+				<h4>Preview <small>( first 10 rows )</small></h4>
 				<table class="table">
 					<tr>
 						<th v-for="( value, index ) in previewHeaders" :key="index">{{value}}</th>
@@ -78,7 +70,8 @@
 					</tr>
 				</table>
 				<br/>
-				<b-button size="lg" variant="primary" @click="submit">Submit</b-button>
+				<b-button size="lg" variant="outline-secondary" class="mr-2" @click="backToMappings">Back</b-button>
+				<b-button size="lg" variant="primary" @click="upload">Upload {{transformedRowsCount}} rows</b-button>
 			</div>
 		</div>
 
@@ -87,6 +80,7 @@
 
 <script>
 import holysheet from '../../..'
+import DropZone from './DropZone'
 
 const transformer = {
 	fileTypes: ['xls'],
@@ -140,6 +134,7 @@ const transformer = {
 		{
 			name: 'ORP Solution mV',
 			outputKeyName: 'orp_solution_mv',
+			description: 'The baseline mV reading of the ORP test solution.',
 			cell: {
 				col: 'E',
 				row: 11
@@ -153,6 +148,7 @@ const transformer = {
 		{
 			name: 'pH Solution ( 4 or 10 )',
 			outputKeyName: 'ph_n',
+			description: 'The baseline pH reading of the non-7 pH test solution; usually 4 or 10.',
 			cell: {
 				col: 'C',
 				row: 10
@@ -165,9 +161,8 @@ const transformer = {
 		}
 	],
 	visitRow( row, extractions ){
-		row.orp_solution_mv = extractions.orp_solution_mv;
-		row.ph_n_value = extractions.ph_n;
-		row[`pH ${extractions.ph_n} mv`] = row['pH N mv'];
+		row.orp_solution_mv = extractions.orp_solution_mv.value;
+		row.ph_n_value = extractions.ph_n.value;
 		return row;
 	}
 };
@@ -175,30 +170,27 @@ const transformer = {
 
 export default {
   name: 'HelloWorld',
+  components: {
+	DropZone
+  },
   data () {
 		return {
-			dragging: false,
 			columnMappings: null,
 			colmnMappingHeaders: null,
 			file: null,
 			columnSelections: {},
 			extractions: null,
-			previewRows: null
+			previewRows: null,
+			transformedRowsCount: null
 		};
   },
   methods: {
-	_dragEnter () {
-		this.dragging = true
-	},
-	_dragLeave () {
-		this.dragging = false
-	},
-	_dragOver ( e ) {
-		e.dataTransfer.dropEffect = 'copy';
-	},
-	async _drop ( e ) {
-		const files = e.dataTransfer.files
-		this.file = files[0]
+	async _fileChanged( file ){
+		console.log("FILE CHANGED", file );
+
+		this.clearSuggestions(); // in case a file was previously loaded
+
+		this.file = file;
 
 		// Caching the read result so i can use it later - don't want it to be reactive for performance reasons
 		this.readResult = await holysheet.readFileForTransformer( this.file, transformer );
@@ -214,20 +206,11 @@ export default {
 			if( candidate.isLikelyMatch ) this.select( column, candidate );
 		}
 	},
-	_fileChanged(){
-
-	},
-	select( column, columnMapping ){
-		this.$set( this.columnSelections, column.name, columnMapping ); // need to use $set or reactivity doesn't work
-	},
-	deselect( column ){
-		this.$set( this.columnSelections, column.name, null );
-	},
-	async next(){
+	async previewTransformations(){
 		const mappings = {};
 		for( let columnName in this.columnSelections ){
 			const column = this.columnSelections[columnName];
-			mappings[columnName] = column.inputColumnName;
+			if( column ) mappings[columnName] = column.inputColumnName;
 		}
 
 		console.log("mappings", mappings, this.readResult);
@@ -250,12 +233,40 @@ export default {
 		}
 
 		this.previewHeaders = [...columnMappingHeaders, ...extraKeys];
+		this.transformedRowsCount = this.transformedRows.length;
+	},
+	clearSuggestions () {
+		this.columnMappings = null;
+		this.extractions = null;
+		this.colmnMappingHeaders = null;
+		this.file = null;
+		this.columnSelections = {};
+		this.readResult = null; // let go of the in-memory file
+	},
+	clearMappings () {
+		this.transformedRowsCount = null;
+		this.previewRows = null;
+		this.transformedRows = null;
+	},
+	select( column, columnMapping ){
+		this.$set( this.columnSelections, column.name, columnMapping ); // need to use $set or reactivity doesn't work
+	},
+	deselect( column ){
+		this.$set( this.columnSelections, column.name, null );
+	},
+	startOver () {
+		this.$refs.dropZone.clear();
+		this.file = null;
+		this.clearMappings();
+		this.clearSuggestions();
+	},
+	backToMappings () {
+		this.clearMappings();
 	}
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 	h3 {
 		margin: 40px 0 0;
@@ -298,16 +309,6 @@ export default {
 				color: #666;
 			}
 		}
-	}
-
-	.dropElement {
-		width: 400px;
-		height: 100px;
-		border: 4px dashed silver;
-	}
-
-	.dragging {
-		border: 4px dashed red;
 	}
 
 	.transformerTable {

@@ -27,8 +27,13 @@ describe('FileTransformer', function(){
 			string: 'other'
 		};
 
-		const fileTransformer = new FileTransformer( transformer, columnMapping );
-		const output = fileTransformer.transformRows( rows );
+		const fileReadResult = {
+			transformer,
+			dataRows: rows
+		};
+
+		const fileTransformer = new FileTransformer( fileReadResult, columnMapping );
+		const output = fileTransformer.transform();
 
 		const first = output[0];
 		assert.equal( first.string, 'one' );
