@@ -55,23 +55,28 @@
 			</div>
 		</div>
 
-		<div class="row" v-if="previewRows">
+		<div class="row" v-if="previewRows && transformedRowErrors.length === 0">
 			<div class="col">
-				<h3>Transformed {{transformedRowsCount}} rows</h3>
-				<br>
-				
-				<h4>Preview <small>( first 10 rows )</small></h4>
-				<table class="table">
-					<tr>
-						<th v-for="( value, index ) in previewHeaders" :key="index">{{value}}</th>
-					</tr>
-					<tr v-for="(row, index) in previewRows" :key="index">
-						<td v-for="( header, index ) in previewHeaders" :key="index">{{row[header]}}</td>
-					</tr>
-				</table>
+				<h4>Transformed {{transformedRowsCount}} rows</h4>
+				<b-table striped hover :items="transformedRows" :per-page="previewRowErrorsPageSize" :current-page="previewRowsPage"></b-table>
+				<b-pagination align="center" size="md" v-model="previewRowsPage" :total-rows="transformedRows.length" :per-page="previewRowErrorsPageSize"></b-pagination>
+
 				<br/>
+
 				<b-button size="lg" variant="outline-secondary" class="mr-2" @click="backToMappings">Back</b-button>
 				<b-button size="lg" variant="primary" @click="upload">Upload {{transformedRowsCount}} rows</b-button>
+			</div>
+		</div>
+
+		<div class="row" v-if="transformedRowErrors.length > 0">
+			<div class="col">
+				<h4>{{transformedRowErrors.length}} errors</h4>
+				<b-table striped hover :fields="transformedRowErrorsFields" :items="transformedRowErrors" :per-page="transformedRowErrorsPageSize" :current-page="currentTransformedRowErrorPage"></b-table>
+				<b-pagination align="center" size="md" v-model="currentTransformedRowErrorPage" :total-rows="transformedRowErrors.length" :per-page="transformedRowErrorsPageSize"></b-pagination>
+			
+				<br/>
+
+				<b-button size="lg" variant="outline-secondary" class="mr-2" @click="backToMappings">Back</b-button>
 			</div>
 		</div>
 
@@ -93,13 +98,19 @@ const transformer = {
 			outputKeyName: 'serial_number',
 			description: 'Use this field to provide helpful information',
 			type: 'string',
+			validate: /^\d{4}P\d*$/gi
 		},
 		{
 			name: 'pH 7 mv',
 			aliases: ['pH 7 Buffer Value (mV)'],
 			outputKeyName: 'ph_7_mv',
 			description: 'Use this field to provide helpful information',
-			type: 'float'
+			type: 'float',
+			validate: function( value ){
+				if( value < -100 || value > 100 ){
+					return new Error('pH 7 is out of bounds');
+				}
+			}
 		},
 		{
 			name: 'pH N mv',
@@ -120,7 +131,12 @@ const transformer = {
 			aliases: ['ORP (mV) in Zobells'],
 			outputKeyName: 'orp_mv',
 			description: 'Use this field to provide helpful information',
-			type: 'float'
+			type: 'float',
+			validate: function( value ){
+				if( value < -100 || value > 500 ){
+					return new Error('ORP mV is out of bounds');
+				}
+			}
 		},
 		{
 			name: 'Temperature ( therm kOhm )',
@@ -183,7 +199,31 @@ export default {
 			columnSelections: {},
 			extractions: null,
 			previewRows: null,
-			transformedRowsCount: null
+			transformedRows: null,
+			transformedRowsCount: null,
+			transformedRowErrors: null,
+			transformedRowErrorsPageSize: 10,
+			currentTransformedRowErrorPage: 1,
+			transformedRowErrorsFields: [
+				{
+					key: 'rowNumber',
+					sortable: true
+				},
+				{
+					key: 'inputColumnName',
+					sortable: true
+				},
+				{ 
+					key: 'transformedValue',
+					sortable: true
+				},
+				{
+					key: 'error',
+					sortable: true
+				}
+			],
+			previewRowErrorsPageSize: 10,
+			previewRowsPage: 1
 		};
   },
   methods: {
@@ -216,8 +256,9 @@ export default {
 		}
 
 		console.log("mappings", mappings, this.readResult);
-		this.transformedRows = await holysheet.transform( this.readResult, mappings );
-		console.log( this.transformedRows );
+		const result = await holysheet.transform( this.readResult, mappings );
+		this.transformedRows = result.transformedRows;
+		this.transformedRowErrors = result.errors;
 
 		this.previewRows = this.transformedRows.slice( 0, 10 );
 
