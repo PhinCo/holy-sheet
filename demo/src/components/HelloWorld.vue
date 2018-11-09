@@ -163,6 +163,8 @@ const transformer = {
 	visitRow( row, extractions ){
 		row.orp_solution_mv = extractions.orp_solution_mv.value;
 		row.ph_n_value = extractions.ph_n.value;
+		row.sensor_manufacturer = 'ASI';
+		row.manufacture_date = null;
 		return row;
 	}
 };
