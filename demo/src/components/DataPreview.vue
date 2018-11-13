@@ -15,7 +15,7 @@ export default {
   name: 'PreviewRows',
   props: {
 	  rows: {
-		  type: Object,
+		  type: Array,
 		  required: true
 	  }
   },

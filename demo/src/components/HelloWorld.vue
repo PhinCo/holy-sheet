@@ -211,6 +211,7 @@ export default {
 		this.clearSuggestions(); // in case a file was previously loaded
 
 		this.file = file;
+		if( !this.file ) return;
 
 		// Caching the read result so i can use it later - don't want it to be reactive for performance reasons
 		this.readResult = await holysheet.readFileForTransformer( this.file, transformer );

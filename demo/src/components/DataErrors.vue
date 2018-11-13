@@ -20,7 +20,7 @@ export default {
   name: 'DataErrors',
   props: {
 	  rows: {
-		  type: Object,
+		  type: Array,
 		  required: true
 	  }
   },
@@ -61,9 +61,6 @@ export default {
 	  rowCount () {
 		  if( !this.rows ) return 0;
 		  return this.rows.length;
-	  },
-	  fields () {
-
 	  }
   },
   methods: {
