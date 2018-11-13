@@ -6,7 +6,7 @@
 			</div>
 		</div>
 
-		<div class="row" v-if="extractions && !previewRows">
+		<div class="row" v-if="extractions && !transformedRows">
 			<div class="col">
 				<h3>Metadata</h3>
 				<table class="table">
@@ -19,7 +19,7 @@
 			</div>
 		</div>
 		
-		<div class="row" v-if="columnMappings && !previewRows">
+		<div class="row" v-if="columnMappings && !transformedRows">
 			<div class="col">
 				<h3>Columns</h3>
 				<table class="table">
@@ -51,29 +51,25 @@
 				</table>
 				<br/>
 				<b-button size="lg" variant="outline-secondary" class="mr-2" @click="startOver">Start Over</b-button>
-				<b-button size="lg" variant="primary" @click="previewTransformations">Next</b-button>
+				<b-button size="lg" variant="primary" @click="previewTransformations">Transform {{rowCount}} rows</b-button>
 			</div>
 		</div>
 
-		<div class="row" v-if="previewRows && transformedRowErrors.length === 0">
+		<div class="row" v-if="transformedRows && transformedRowErrors && transformedRowErrors.length === 0">
 			<div class="col">
-				<h4>Transformed {{transformedRowsCount}} rows</h4>
-				<b-table striped hover :items="transformedRows" :per-page="previewRowErrorsPageSize" :current-page="previewRowsPage"></b-table>
-				<b-pagination align="center" size="md" v-model="previewRowsPage" :total-rows="transformedRows.length" :per-page="previewRowErrorsPageSize"></b-pagination>
-
+				<data-preview :rows="transformedRows"></data-preview>
+	
 				<br/>
 
 				<b-button size="lg" variant="outline-secondary" class="mr-2" @click="backToMappings">Back</b-button>
-				<b-button size="lg" variant="primary" @click="upload">Upload {{transformedRowsCount}} rows</b-button>
+				<b-button size="lg" variant="primary" @click="upload">Upload {{rowCount}} rows</b-button>
 			</div>
 		</div>
 
-		<div class="row" v-if="transformedRowErrors.length > 0">
+		<div class="row" v-if="transformedRowErrors && transformedRowErrors.length > 0">
 			<div class="col">
-				<h4>{{transformedRowErrors.length}} errors</h4>
-				<b-table striped hover :fields="transformedRowErrorsFields" :items="transformedRowErrors" :per-page="transformedRowErrorsPageSize" :current-page="currentTransformedRowErrorPage"></b-table>
-				<b-pagination align="center" size="md" v-model="currentTransformedRowErrorPage" :total-rows="transformedRowErrors.length" :per-page="transformedRowErrorsPageSize"></b-pagination>
-			
+				<data-errors :rows="transformedRowErrors"></data-errors>
+
 				<br/>
 
 				<b-button size="lg" variant="outline-secondary" class="mr-2" @click="backToMappings">Back</b-button>
@@ -86,6 +82,8 @@
 <script>
 import holysheet from '../../..'
 import DropZone from './DropZone'
+import DataPreview from './DataPreview'
+import DataErrors from './DataErrors';
 
 const transformer = {
 	fileTypes: ['xls'],
@@ -107,7 +105,7 @@ const transformer = {
 			description: 'Use this field to provide helpful information',
 			type: 'float',
 			validate: function( value ){
-				if( value < -100 || value > 100 ){
+				if( value < -10 || value > 10 ){
 					return new Error('pH 7 is out of bounds');
 				}
 			}
@@ -189,7 +187,9 @@ const transformer = {
 export default {
   name: 'HelloWorld',
   components: {
-	DropZone
+	DropZone,
+	DataPreview,
+	DataErrors
   },
   data () {
 		return {
@@ -198,32 +198,10 @@ export default {
 			file: null,
 			columnSelections: {},
 			extractions: null,
-			previewRows: null,
+			rowCount: null,
 			transformedRows: null,
 			transformedRowsCount: null,
-			transformedRowErrors: null,
-			transformedRowErrorsPageSize: 10,
-			currentTransformedRowErrorPage: 1,
-			transformedRowErrorsFields: [
-				{
-					key: 'rowNumber',
-					sortable: true
-				},
-				{
-					key: 'inputColumnName',
-					sortable: true
-				},
-				{ 
-					key: 'transformedValue',
-					sortable: true
-				},
-				{
-					key: 'error',
-					sortable: true
-				}
-			],
-			previewRowErrorsPageSize: 10,
-			previewRowsPage: 1
+			transformedRowErrors: null
 		};
   },
   methods: {
@@ -242,6 +220,7 @@ export default {
 
 		this.columnMappings = suggestions;
 		this.extractions = extractions;
+		this.rowCount = this.readResult.dataRows.length;
 
 		for( let column of this.columnMappings ){
 			const candidate = column.possibleInputFileColumns[0];
@@ -255,28 +234,11 @@ export default {
 			if( column ) mappings[columnName] = column.inputColumnName;
 		}
 
-		console.log("mappings", mappings, this.readResult);
 		const result = await holysheet.transform( this.readResult, mappings );
 		this.transformedRows = result.transformedRows;
 		this.transformedRowErrors = result.errors;
-
-		this.previewRows = this.transformedRows.slice( 0, 10 );
-
-		const columnMappingHeaders = _.map( this.columnMappings, function( columnMapping ){
-			return columnMapping.name;
-		});
-
-		const keysFromFirstRow = Object.keys( this.previewRows[0] );
-
-		const extraKeys = []
-		for( let key of keysFromFirstRow ){
-			if( columnMappingHeaders.indexOf( key ) === -1 ){
-				extraKeys.push( key );
-			}
-		}
-
-		this.previewHeaders = [...columnMappingHeaders, ...extraKeys];
 		this.transformedRowsCount = this.transformedRows.length;
+		console.log("Transform result", result );
 	},
 	clearSuggestions () {
 		this.columnMappings = null;
@@ -288,8 +250,8 @@ export default {
 	},
 	clearMappings () {
 		this.transformedRowsCount = null;
-		this.previewRows = null;
 		this.transformedRows = null;
+		this.transformedRowErrors = null;
 	},
 	select( column, columnMapping ){
 		this.$set( this.columnSelections, column.name, columnMapping ); // need to use $set or reactivity doesn't work
@@ -305,6 +267,9 @@ export default {
 	},
 	backToMappings () {
 		this.clearMappings();
+	},
+	upload () {
+
 	}
   }
 }

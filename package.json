@@ -32,7 +32,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "papaparse": "^4.6.1",
-    "string-similarity": "^1.2.2",
+    "request": "^2.88.0",
     "xlsx": "^0.11.19"
   },
   "devDependencies": {
