@@ -10,7 +10,8 @@ describe('FileTransformer', function(){
 			columns: [
 				{
 					name: 'string',
-					type: 'string'
+					type: 'string',
+					outputKeyName: 'dastring'
 				}
 			]
 		};
@@ -37,10 +38,10 @@ describe('FileTransformer', function(){
 		const output = fileTransformer.transform();
 
 		const first = output.transformedRows[0];
-		assert.equal( first.string, 'one' );
+		assert.equal( first.dastring, 'one' );
 
 		const second = output.transformedRows[1];
-		assert.equal( second.string, 'two' );
+		assert.equal( second.dastring, 'two' );
 	});
 
 	it('returns validation errors', function(){
