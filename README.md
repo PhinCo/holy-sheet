@@ -6,7 +6,7 @@
 [![bitHound Code](https://www.bithound.io/github/PhinCo/holy-sheet/badges/code.svg)](https://www.bithound.io/github/PhinCo/holy-sheet)
 
 
-Converts spreadsheets created and modified by humans and converts them sheets that can be used by machines.
+Converts spreadsheets, created and modified by humans, into sheets that can be used by machines.
 
 ![alt text](https://raw.githubusercontent.com/PhinCo/holy-sheet/master/images/holy-sheet-intro.png)
 
