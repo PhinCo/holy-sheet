@@ -161,3 +161,12 @@ Allows columns with a set of allowed values. Supports single or multiple values.
     excludeInvalidValues: true
 }
 ```
+
+
+# Developing
+
+Run the demo server `vue ui` and run the 'Serve' task in the Vue UI app.
+
+View the holy sheet demo app at `http://localhost:8080/`
+
+

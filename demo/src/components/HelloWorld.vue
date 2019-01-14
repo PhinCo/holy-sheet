@@ -57,7 +57,7 @@
 
 		<div class="row" v-if="transformedRows && transformedRowErrors && transformedRowErrors.length === 0">
 			<div class="col">
-				<data-preview :rows="transformedRows"></data-preview>
+				<data-preview :rows="transformedRows" :columnNamesInOrder="transformedOutputKeyNamesInOrder"></data-preview>
 	
 				<br/>
 
@@ -89,6 +89,7 @@ const transformer = {
 	fileTypes: ['xls'],
 	headerRowNumber: 10,
 	skipRowsFromHeader: [1, 2, 3],
+	sendUnmappedColumnsInColumnNamed: 'unmappedColumns',
 	columns: [
 		{
 			name: 'Serial Number',
@@ -104,11 +105,11 @@ const transformer = {
 			outputKeyName: 'ph_7_mv',
 			description: 'Use this field to provide helpful information',
 			type: 'float',
-			validate: function( value ){
-				if( value < -10 || value > 10 ){
-					return new Error('pH 7 is out of bounds');
-				}
-			}
+			// validate: function( value ){
+			// 	if( value < -10 || value > 10 ){
+			// 		return new Error('pH 7 is out of bounds');
+			// 	}
+			// }
 		},
 		{
 			name: 'pH N mv',
@@ -214,8 +215,16 @@ export default {
 		if( !this.file ) return;
 
 		// Caching the read result so i can use it later - don't want it to be reactive for performance reasons
-		this.readResult = await holysheet.readFileForTransformer( this.file, transformer );
-		console.log( "read result", this.readResult );
+		try {
+			this.readResult = await holysheet.readFileForTransformer( this.file, transformer );
+			console.log( "read result", this.readResult );
+		}catch ( e ){
+			console.log( "Error reading input file", e );
+			this.readResult = null;
+			this.file = null;
+			return;
+		}
+		
 
 		const { suggestions, extractions } = await holysheet.prepareColumnMappingInfo( this.readResult );
 
@@ -239,6 +248,7 @@ export default {
 		this.transformedRows = result.transformedRows;
 		this.transformedRowErrors = result.errors;
 		this.transformedRowsCount = this.transformedRows.length;
+		this.transformedOutputKeyNamesInOrder = result.outputKeyNamesInOrder;
 		console.log("Transform result", result );
 	},
 	clearSuggestions () {

@@ -3,7 +3,13 @@
 		<div class="row">
 			<div class="col">
 				<h4>Previewing {{rowCount}} rows</h4>
-				<b-table striped hover :xfields="fields" :items="rows" :per-page="pageSize" :current-page="pageNumber"></b-table>
+				<b-table striped hover :fields="fields" :items="rows" :per-page="pageSize" :current-page="pageNumber">
+					 <template slot="unmappedColumns" slot-scope="data">
+						<div v-for="(value, key) in data.value" :key="key">
+							{{ key }} = {{ value }}
+						</div>
+					</template>
+				</b-table>
 				<b-pagination align="center" size="sm" v-model="pageNumber" :total-rows="rowCount" :per-page="pageSize"></b-pagination>
 			</div>
 		</div>
@@ -17,6 +23,9 @@ export default {
 	  rows: {
 		  type: Array,
 		  required: true
+	  },
+	  columnNamesInOrder: {
+		  type: Array
 	  }
   },
   data () {
@@ -30,8 +39,14 @@ export default {
 		  if( !this.rows ) return 0;
 		  return this.rows.length;
 	  },
-	  fields () {
-
+	  fields (){
+		  if( !this.columnNamesInOrder ) return null
+		  return this.columnNamesInOrder.map( n => {
+			  return {
+				key: n,
+			  	label: n
+			  }
+		  });
 	  }
   },
   methods: {
