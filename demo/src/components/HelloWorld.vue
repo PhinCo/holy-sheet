@@ -38,7 +38,7 @@
 								<small>{{columnSelections[column.name].exampleData.join(', ')}}</small>
 							</div>
 							<div v-else>
-								Skipped
+								Not Matched
 							</div>
 							<b-dropdown class="columnDropdown" variant="outline-secondary" size="sm">
 								<b-dropdown-item class="columnSelection" v-for="possible in column.possibleInputFileColumns" :key="column.name + '-' + possible.inputColumnName" @click="select( column, possible )">
@@ -100,8 +100,8 @@ const transformer = {
 			validate: /^\d{4}P\d*$/gi
 		},
 		{
-			name: 'pH 7 mv',
-			aliases: ['pH 7 Buffer Value (mV)'],
+			name: 'fuck you',
+			aliases: ['fuck you'],
 			outputKeyName: 'ph_7_mv',
 			description: 'Use this field to provide helpful information',
 			type: 'float',
