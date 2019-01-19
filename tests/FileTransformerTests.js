@@ -122,5 +122,65 @@ describe('FileTransformer', function(){
 		assert.equal( error5.key, 'two' );
 		assert.equal( error5.transformedValue, 5.55 );
 	});
+});
+
+
+describe('Blank line configuration', function(){
+
+
+	function transformer () {
+		return {
+			columns: [
+				{
+					name: 'first name',
+					type: 'string',
+					outputKeyName: 'firstName'
+				},
+				{
+					name: 'last name',
+					type: 'string',
+					outputKeyName: 'lastName'
+				}
+			]
+		};
+	}
+
+	function rows () {
+		return [
+			{
+				'FST NM': 'John',
+				'LST NM': 'Smith'
+			},
+			{
+				'FST NM': 'Mary',
+				'LST NM': 'Albertson'
+			}
+		];
+	}
+
+	function columnMapping () {
+		return {
+			'first name': 'FST NM',
+			'last name': 'LST NM'
+		};
+	}
+
+	it('ignores blank lines by default', function(){
+
+		const allRowsPlusABlankLine = rows();
+		const fileReadResult = {transformer: transformer(), dataRows: allRowsPlusABlankLine};
+		const fileTransformer = new FileTransformer( fileReadResult, columnMapping() );
+
+		const output = fileTransformer.transform();
+		assert.equal(0, output.errors.length);
+
+		const first = output.transformedRows[0];
+		assert.equal( first.firstName, 'John' );
+		assert.equal( first.lastName, 'Smith' );
+
+		const second = output.transformedRows[1];
+		assert.equal( second.firstName, 'Mary' );
+		assert.equal( second.lastName, 'Albertson' );
+	});
 
 });
