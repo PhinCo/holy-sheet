@@ -165,12 +165,12 @@ Allows columns with a set of allowed values. Supports single or multiple values.
 ## Optional configuration
 
             	
-| Name          | Description          | Default  |
-| ------------- |:------------- :| -----:|
-| headerRowNumber      |  Row number for the headers |  |
-| skipRowsFromHeader      | Number of rows between header and the first row of data       |   0 |
-| sendUnmappedColumnsInColumnNamed | Adds a column which contains any nonmapped columns      |    Ignores unmapped columns by default |            	
-| ignoreBlankLines | Ignore lines where all cells are empty      |    true |
+| Name          | Description          | Default  | Notes | 
+| ------------- |:------------- :| -----:|-----:|
+| headerRowNumber      |  Row number for the headers |  | |
+| skipRowsFromHeader      | Number of rows between header and the first row of data       |   0 | |
+| sendUnmappedColumnsInColumnNamed | Adds a column which contains any nonmapped columns      |    Ignores unmapped columns by default | |            	
+| ignoreBlankLines | Ignore lines where all cells are empty      |    true | Only available for XLSX files | 
 
 # Developing
 
