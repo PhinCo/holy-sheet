@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 function firstFullRow() {
 	return {
+		'__rowNumber': 0,
 		'FST NM': 'John',
 		'LST NM': 'Smith'
 	};
@@ -11,6 +12,7 @@ function firstFullRow() {
 
 function secondFullRow() {
 	return {
+		'__rowNumber': 1,
 		'FST NM': 'Mary',
 		'LST NM': 'Albertson'
 	};
@@ -18,6 +20,7 @@ function secondFullRow() {
 
 function partiallyBlankRow() {
 	return {
+		'__rowNumber': 3,
 		'FST NM': null,
 		'LST NM': 'Albertson'
 	};
@@ -25,6 +28,7 @@ function partiallyBlankRow() {
 
 function blankRow() {
 	return {
+		'__rowNumber': 4,
 		'FST NM': null,
 		'LST NM': null
 	};
@@ -45,7 +49,7 @@ describe('Blank rows are handled based on the configuration setting', function()
 	it('should return all rows based on the configuration', function(){
 		const ignoreBlankLines = false;
 
-		const processedRows = RowPreprocessor.removeRowsWithoutData( allRows(), ignoreBlankLines);
+		const processedRows = new RowPreprocessor().removeRowsWithoutData( allRows(), ignoreBlankLines);
 		assert.isTrue(_.isEqual(allRows(), processedRows));
 
 	});
@@ -53,14 +57,14 @@ describe('Blank rows are handled based on the configuration setting', function()
 	it('should remove the blank row based on the configuration', function(){
 		const ignoreBlankLines = true;
 
-		const processedRows = RowPreprocessor.removeRowsWithoutData( allRows(), ignoreBlankLines);
+		const processedRows = new RowPreprocessor().removeRowsWithoutData( allRows(), ignoreBlankLines);
 		assert.isTrue(_.isEqual(allRowsExceptBlankRow(), processedRows));
 	});
 
 	it('should remove the blank row even though no configuration is provided', function(){
 		const ignoreBlankLines = undefined;
 
-		const processedRows = RowPreprocessor.removeRowsWithoutData( allRows(), ignoreBlankLines);
+		const processedRows = new RowPreprocessor().removeRowsWithoutData( allRows(), ignoreBlankLines);
 		assert.isTrue(_.isEqual(allRowsExceptBlankRow(), processedRows));
 	});
 
