@@ -122,5 +122,5 @@ describe('FileTransformer', function(){
 		assert.equal( error5.key, 'two' );
 		assert.equal( error5.transformedValue, 5.55 );
 	});
-
 });
+

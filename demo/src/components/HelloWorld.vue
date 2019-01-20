@@ -95,21 +95,16 @@ const transformer = {
 			name: 'Serial Number',
 			aliases: ['DATE CODE/SERIAL#'],
 			outputKeyName: 'serial_number',
-			description: 'Use this field to provide helpful information',
+			description: 'Serial number for the sensor',
 			type: 'string',
 			validate: /^\d{4}P\d*$/gi
 		},
 		{
-			name: 'fuck you',
-			aliases: ['fuck you'],
+			name: 'pH 7 mv',
+			aliases: ['pH 7 Buffer Value (mV)'],
 			outputKeyName: 'ph_7_mv',
 			description: 'Use this field to provide helpful information',
-			type: 'float',
-			// validate: function( value ){
-			// 	if( value < -10 || value > 10 ){
-			// 		return new Error('pH 7 is out of bounds');
-			// 	}
-			// }
+			type: 'float'
 		},
 		{
 			name: 'pH N mv',
