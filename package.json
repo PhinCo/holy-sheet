@@ -1,6 +1,6 @@
 {
   "name": "@connectedyard/holysheet",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Validate and map columns from one CSV file to another",
   "main": "index.js",
   "scripts": {
