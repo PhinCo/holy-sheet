@@ -37,7 +37,7 @@ describe( 'DateTransformer', function(){
 	});
 	
 	it( 'returns the default default value when passed an invalid date string', async function(){
-		const transformer = new DateTransformer( { name: 'date' }, "source" );
+		const transformer = new DateTransformer( { name: 'date' }, 'source' );
 		assert.isNull( transformer.transform( '99/02/2018' ) );
 	});
 

@@ -60,7 +60,7 @@ describe( 'FloatTransformer', function(){
 		const transformer = new FloatTransformer( {
 			name: 'integer',
 			regex: {
-				match: /^-([\d\.]+)-$/gi,
+				match: /^-([\d.]+)-$/gi,
 				replace: '$1'
 			}
 		});

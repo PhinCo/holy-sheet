@@ -62,7 +62,7 @@ describe('FileTransformer', function(){
 						match: /^xxx([^x]+)xxx$/gi,
 						replace: '$1'
 					},
-					validate: /^[123467890\.]+$/gi // fuck 5's man - any number with a 5 in it will die
+					validate: /^[123467890.]+$/gi // fuck 5's man - any number with a 5 in it will die
 				},
 				{
 					name: 'three',
@@ -109,6 +109,7 @@ describe('FileTransformer', function(){
 		const { errors } = output;
 
 		const error3 = _.find( errors, { rowNumber: 3 });
+		// eslint-disable-next-line quotes
 		assert.equal( error3.error, `3's suck dawg` );
 		assert.equal( error3.inputColumnName, 'input3' );
 		assert.equal( error3.inputValue, 'xxx3.33xxx' );
@@ -116,7 +117,8 @@ describe('FileTransformer', function(){
 		assert.equal( error3.transformedValue, 3.33 );
 
 		const error5 = _.find( errors, { rowNumber: 5 });
-		assert.equal( error5.error, `Value '5.55' does not match regex: /^[123467890\\.]+$/gi` );
+		// eslint-disable-next-line quotes
+		assert.equal( error5.error, `Value '5.55' does not match regex: /^[123467890.]+$/gi` );
 		assert.equal( error5.inputColumnName, 'input2' );
 		assert.equal( error5.inputValue, 'xxx5.55xxx' );
 		assert.equal( error5.key, 'two' );

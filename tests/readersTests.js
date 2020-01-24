@@ -35,14 +35,14 @@ describe('XLSX reader', function(){
 					},
 					type: 'integer',
 					regex: {
-						match: /^.*\(([^\)]+)\)$/g,
+						match: /^.*\(([^)]+)\)$/g,
 						replace: '$1'
 					},
 				}
 			]
 		};
 
-		const file = new File( resolve( __dirname, './test-files/extractions.xlsx') );
+		const file = new File( resolve( __dirname, './test-files/extractions.xlsx') );// eslint-disable-line no-undef
 		const readResult = await holysheet.readFileForTransformer( file, transformer );
 
 		const { dataRows, extractions, columnHeaders, transformer: outputTransformer } = readResult;
@@ -115,14 +115,14 @@ describe('CSV reader', function(){
 					},
 					type: 'integer',
 					regex: {
-						match: /^.*\(([^\)]+)\)$/g,
+						match: /^.*\(([^)]+)\)$/g,
 						replace: '$1'
 					},
 				}
 			]
 		};
 
-		const file = new File( resolve( __dirname, './test-files/extractions.csv') );
+		const file = new File( resolve( __dirname, './test-files/extractions.csv') );// eslint-disable-line no-undef
 		const readResult = await holysheet.readFileForTransformer( file, transformer );
 
 		const { dataRows, extractions, columnHeaders, transformer: outputTransformer } = readResult;

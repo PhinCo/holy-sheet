@@ -65,21 +65,21 @@ describe( 'prepareColumnMappingInfo', function(){
 	}
 
 	it( 'appropriately loads a csv file and offers suggestions', async function(){
-		const file = new File('./tests/test-files/basic.csv');
+		const file = new File('./tests/test-files/basic.csv');// eslint-disable-line no-undef
 		const readResult = await holysheet.readFileForTransformer( file, basicCsvTransformer );
 		const result = await holysheet.prepareColumnMappingInfo( readResult, { dataPreviewCount: 3 } );
 		_assertOutput( result );
 	});
 
 	it( 'appropriately loads a xlsx file and offers suggestions', async function(){
-		const file = new File('./tests/test-files/basic.xlsx');
+		const file = new File('./tests/test-files/basic.xlsx');// eslint-disable-line no-undef
 		const readResult = await holysheet.readFileForTransformer( file, basicCsvTransformer );
 		const result = await holysheet.prepareColumnMappingInfo(readResult, { dataPreviewCount: 3 } );
 		_assertOutput( result );
 	});
 
 	it( 'uses column alliases to match the integer column', async function(){
-		const file = new File('./tests/test-files/basic.xlsx');
+		const file = new File('./tests/test-files/basic.xlsx');// eslint-disable-line no-undef
 		const readResult = await holysheet.readFileForTransformer( file, {
 			columns: [
 				{
