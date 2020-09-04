@@ -31,7 +31,7 @@
     "jsonschema": "^1.2.4",
     "lodash": "^4.17.15",
     "moment": "^2.22.2",
-    "papaparse": "^4.6.1",
+    "papaparse": "^5.2.0",
     "request": "^2.88.0",
     "string-similarity": "^2.0.0",
     "xlsx": "^0.11.19"
