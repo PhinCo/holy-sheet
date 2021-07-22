@@ -34,7 +34,7 @@
     "papaparse": "^4.6.1",
     "request": "^2.88.0",
     "string-similarity": "^2.0.0",
-    "xlsx": "^0.11.19"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
